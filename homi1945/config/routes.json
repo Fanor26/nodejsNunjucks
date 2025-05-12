@@ -1,0 +1,37 @@
+[
+  {
+    "path": "/login",
+    "view": "auth/login.njk",
+    "title": "Iniciar Sesión",
+    "mdname": "Autenticación",
+    "private": false
+  },
+  {
+    "path": "/register",
+    "view": "auth/register.njk",
+    "title": "Registrarse",
+    "mdname": "Autenticación",
+    "private": false
+  },
+  {
+    "path": "/",
+    "view": "home.njk",
+    "title": "Inicio",
+    "mdname": "Público",
+    "private": false
+  },
+  {
+    "path": "/dashboard",
+    "view": "dashboard/index.njk",
+    "title": "Tablero",
+    "mdname": "Privado",
+    "private": true
+  },
+  {
+    "path": "/profile",
+    "view": "dashboard/profile.njk",
+    "title": "Perfil",
+    "mdname": "Usuarios",
+    "private": true
+  }
+]
