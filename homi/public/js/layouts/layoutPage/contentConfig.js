@@ -1,0 +1,54 @@
+import { routeControllers } from '../../controllers/uiRoutes/index.js';
+import { debugLog } from '../../debug.js';
+
+export const createContent = (routes,  currentPath) => {
+  const defaultContent = {
+    type: 'text',
+    content: 'Contenido no disponible',
+    styles: { fontSize: '1.2rem', color: '#999' },
+  };
+
+  // Validación básica de ruta
+  if (!currentPath || !routes?.length) {
+    debugLog('Error: Ruta o lista de rutas inválida');
+    return {
+      area: 'content',
+      type: 'container',
+      children: [defaultContent],
+    };
+  }
+
+  // Obtener contenido inicial
+  try {
+    const controller = routeControllers[currentPath];
+    const content =
+      typeof controller === 'function'
+        ? controller() // Removed refresh parameter since it's not needed
+        : controller || defaultContent;
+
+    return {
+      area: 'content',
+      type: 'container',
+      tag: 'main',
+
+      styles: {
+        overflowY: 'auto',
+        padding: '20px',
+        backgroundColor: '#2c3e50',
+      },
+      children: Array.isArray(content) ? content : [content],
+    };
+  } catch (error) {
+    console.error('Error en createContent:', error);
+    return {
+      area: 'content',
+      type: 'container',
+      children: [
+        {
+          ...defaultContent,
+          content: 'Error al cargar contenido',
+        },
+      ],
+    };
+  }
+};
