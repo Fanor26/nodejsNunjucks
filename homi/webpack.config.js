@@ -1,24 +1,24 @@
 // webpack.config.js
-import path from 'path'
-import { fileURLToPath } from 'url'
-import TerserPlugin from 'terser-webpack-plugin'
+import path from 'path';
+import { fileURLToPath } from 'url';
+import TerserPlugin from 'terser-webpack-plugin';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default {
   entry: './public/js/main.js',
   output: {
     filename: 'bundle.min.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
   },
   module: {
     rules: [
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
-      }
-    ]
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   optimization: {
     minimize: true,
@@ -29,8 +29,8 @@ export default {
             reserved: ['renderers', 'initComponents'], // Variables a proteger
             toplevel: true, // Ofuscar a nivel global
             properties: {
-              regex: /^_/ // No ofuscar propiedades que empiecen con _
-            }
+              regex: /^_/, // No ofuscar propiedades que empiecen con _
+            },
           },
           compress: {
             drop_console: true, // Elimina console.log
@@ -40,26 +40,26 @@ export default {
             unsafe: true, // Optimizaciones "inseguras" pero efectivas
             unsafe_math: true, // Optimizaciones matemáticas
             unsafe_methods: true, // Optimizaciones de métodos
-            unsafe_proto: true // Optimizaciones de prototipos
+            unsafe_proto: true, // Optimizaciones de prototipos
           },
           format: {
             comments: false, // Elimina todos los comentarios
             beautify: false, // No formatear el código
-            ecma: 2020 // Versión ECMAScript
+            ecma: 2020, // Versión ECMAScript
           },
           ecma: 2020, // Especifica versión ECMAScript
           keep_classnames: false, // Ofuscar nombres de clases
-          keep_fnames: false // Ofuscar nombres de funciones
+          keep_fnames: false, // Ofuscar nombres de funciones
         },
         extractComments: false,
-        parallel: true // Usar múltiples núcleos
-      })
-    ]
+        parallel: true, // Usar múltiples núcleos
+      }),
+    ],
   },
   mode: 'production',
   performance: {
     hints: 'warning', // Mostrar advertencias de rendimiento
     maxEntrypointSize: 512000, // 500KB
-    maxAssetSize: 512000 // 500KB
-  }
-}
+    maxAssetSize: 512000, // 500KB
+  },
+};

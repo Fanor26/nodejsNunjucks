@@ -1,196 +1,204 @@
-import { debugLog } from '../../debug.js';
+import DataGrid from '../../components/elementTypes/dataGrid.js';
 
 export default function about() {
-  // Estado para controlar los dos contadores
-  let counter1 = 0;
-  let counter2 = 0;
+  let currentInput = '';
+  let lastResult = null;
+  let history = [];
 
-  // Estado para controlar si el contenido está en modo de edición
-  let isEditing = false;
-  let markdownContent = `# Sobre Nosotros\n\n**Sistema de Gestión Médica**\n\n- Fundado en 2023\n- Especializado en clínicas\n- Soporte 24/7\n\n[Contacto](mailto:info@clinica.com)`;
+  const handleButtonClick = (value) => {
+    if (value === 'C') {
+      clearInput();
+      return;
+    }
 
-  // Función para manejar el clic en el botón de edición
-  const handleEditClick = () => {
-    isEditing = !isEditing; // Cambia entre modo edición y modo visualización
-    updateContent();
-  };
+    if (value === '=') {
+      calculateResult();
+      return;
+    }
 
-  // Función para actualizar el contenido de la sección
-  const updateContent = () => {
-    const contentElement = document.querySelector('.markdown-content');
-
-    if (isEditing) {
-      contentElement.innerHTML = `<textarea id="editor" style="width: 100%; height: 200px; border: 1px solid #ddd; padding: 10px;">${markdownContent}</textarea>`;
-      // Crear un botón de guardar
-      contentElement.innerHTML += `<button onclick="saveContent()">Guardar cambios</button>`;
+    if (lastResult !== null && ['+', '-', '*', '/'].includes(value)) {
+      currentInput = lastResult + value;
+      lastResult = null;
+    } else if (lastResult !== null) {
+      currentInput = value;
+      lastResult = null;
     } else {
-      // Mostrar contenido de Markdown cuando no se edita
-      contentElement.innerHTML = marked(markdownContent); // Usamos "marked" para convertir Markdown a HTML
+      currentInput += value;
+    }
+
+    updateDisplay();
+  };
+
+  const calculateResult = () => {
+    try {
+      if (!currentInput || !/\d/.test(currentInput)) return;
+
+      const expression = currentInput.replace(/×/g, '*').replace(/÷/g, '/');
+      const result = basicCalculator(expression);
+
+      lastResult = String(
+        Number.isInteger(result) ? result : parseFloat(result.toFixed(6))
+      );
+
+      const now = new Date();
+      const timestamp = now.toLocaleString();
+
+      // Añadir al historial (con operación, resultado, fecha)
+      history.unshift({
+        operation: currentInput,
+        result: lastResult,
+        timestamp: timestamp,
+      });
+
+      if (history.length > 10) history.pop();
+
+      currentInput = lastResult;
+      updateDisplay();
+      updateHistory();
+    } catch (error) {
+      console.error('[Error]', error.message);
+      currentInput = 'Error';
+      updateDisplay();
+      setTimeout(clearInput, 1000);
     }
   };
 
-  // Función para guardar el contenido editado
-  const saveContent = () => {
-    const editor = document.getElementById('editor');
-    markdownContent = editor.value; // Actualiza el contenido con lo que el usuario escribió
-    isEditing = false; // Vuelve a desactivar el modo de edición
-    updateContent(); // Actualiza el contenido con el nuevo markdown
-  };
+  const basicCalculator = (expr) => {
+    const tokens = expr.match(/(\d+(\.\d+)?|[+\-*/])/g);
+    if (!tokens) throw new Error('Expresión inválida');
 
-  // Función para incrementar el contador 1
-  const incrementCounter1 = () => {
-    counter1++; // Incrementamos el contador 1
-    debugLog(`Contador 1 incrementado: ${counter1}`); // Mostrar el contador 1 con debugLog
-    updateCounterDisplay(); // Actualizamos la visualización de ambos contadores
-  };
+    const stack = [];
+    let currentOp = '+';
 
-  // Función para disminuir el contador 1
-  const decrementCounter1 = () => {
-    counter1--; // Decrementamos el contador 1
-    debugLog(`Contador 1 disminuido: ${counter1}`); // Mostrar el contador 1 con debugLog
-    updateCounterDisplay(); // Actualizamos la visualización de ambos contadores
-  };
+    for (let token of tokens) {
+      if (['+', '-', '*', '/'].includes(token)) {
+        currentOp = token;
+      } else {
+        let num = parseFloat(token);
+        if (isNaN(num)) throw new Error('Número inválido');
 
-  // Función para incrementar el contador 2
-  const incrementCounter2 = () => {
-    counter2++; // Incrementamos el contador 2
-    debugLog(`Contador 2 incrementado: ${counter2}`); // Mostrar el contador 2 con debugLog
-    updateCounterDisplay(); // Actualizamos la visualización de ambos contadores
-  };
-
-  // Función para disminuir el contador 2
-  const decrementCounter2 = () => {
-    counter2--; // Decrementamos el contador 2
-    debugLog(`Contador 2 disminuido: ${counter2}`); // Mostrar el contador 2 con debugLog
-    updateCounterDisplay(); // Actualizamos la visualización de ambos contadores
-  };
-
-  // Función para actualizar los contadores en el DOM
-  const updateCounterDisplay = () => {
-    const counter1Element = document.querySelector('.counter1-text');
-    const counter2Element = document.querySelector('.counter2-text');
-
-    if (counter1Element) {
-      counter1Element.innerText = `Contador 1: ${counter1}`; // Actualizamos el contador 1
+        if (currentOp === '+') stack.push(num);
+        if (currentOp === '-') stack.push(-num);
+        if (currentOp === '*') stack.push(stack.pop() * num);
+        if (currentOp === '/') stack.push(stack.pop() / num);
+      }
     }
-    if (counter2Element) {
-      counter2Element.innerText = `Contador 2: ${counter2}`; // Actualizamos el contador 2
+
+    return stack.reduce((a, b) => a + b, 0);
+  };
+
+  const clearInput = () => {
+    currentInput = '';
+    lastResult = null;
+    updateDisplay();
+  };
+
+  const updateDisplay = () => {
+    const display = document.querySelector('.calculator-display');
+    if (display) {
+      display.innerText = currentInput || '0';
     }
   };
+  const updateHistory = () => {
+    const historyContainer = document.querySelector('.calculator-history');
+    if (historyContainer) {
+      historyContainer.innerHTML = ''; // Limpiar contenido
 
-  // Contenido de la página
+      if (history.length === 0) {
+        historyContainer.textContent = 'Historial vacío';
+        return;
+      }
+
+      const dataGrid = DataGrid.create({
+        title: 'Historial de Operaciones',
+        searchPlaceholder: 'Buscar operación...',
+        columns: [
+          { title: 'Operación', field: 'operation', minWidth: '150px' },
+          { title: 'Resultado', field: 'result', minWidth: '100px' },
+          { title: 'Fecha', field: 'timestamp', minWidth: '180px' },
+        ],
+        data: history,
+      });
+
+      historyContainer.appendChild(dataGrid);
+    }
+  };
+
+  const buttons = [
+    '7',
+    '8',
+    '9',
+    '÷',
+    '4',
+    '5',
+    '6',
+    '×',
+    '1',
+    '2',
+    '3',
+    '-',
+    '0',
+    '.',
+    '=',
+    '+',
+    'C',
+  ];
+
   return {
     type: 'container',
     children: [
       {
-        type: 'markdown', // Usamos Markdown para el contenido inicial
-        content: markdownContent,
+        type: 'div',
+        className: 'calculator-display',
+        content: '0',
         styles: {
           backgroundColor: '#f9f9f9',
           padding: '1rem',
           borderRadius: '8px',
+          fontSize: '2rem',
+          textAlign: 'right',
+          color: '#333',
+          marginBottom: '20px',
+        },
+      },
+      {
+        type: 'container',
+        className: 'buttons-grid',
+        styles: {
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: '10px',
+        },
+        children: buttons.map((btn) => ({
+          type: 'button',
+          label: btn,
+          styles: {
+            padding: '20px',
+            backgroundColor: btn === 'C' ? '#e74c3c' : '#3498db',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '1.5rem',
+            cursor: 'pointer',
+            gridColumn: btn === 'C' ? 'span 4' : 'auto',
+          },
+          onClick: () => handleButtonClick(btn),
+        })),
+      },
+      {
+        type: 'div',
+        className: 'calculator-history',
+        styles: {
+          marginTop: '30px',
+          padding: '1rem',
+          backgroundColor: '#f0f0f0',
+          borderRadius: '8px',
+          maxHeight: '200px',
+          overflowY: 'auto',
           fontSize: '1rem',
-          lineHeight: '1.6',
-          color: '#333',
+          color: '#555',
         },
-        className: 'markdown-content', // Le damos una clase para acceder fácilmente
-      },
-      {
-        type: 'button',
-        label: 'Editar Markdown', // Botón para activar el modo de edición
-        styles: {
-          display: 'block',
-          width: '100%',
-          margin: '8px 0',
-          padding: '10px',
-          backgroundColor: '#3498db',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        },
-        onClick: handleEditClick, // Llamamos a la función cuando se hace clic
-      },
-
-      {
-        type: 'text', // Este es el contenedor donde se muestra el valor del contador 1
-        content: `Contador 1: ${counter1}`,
-        className: 'counter1-text', // Le damos una clase para que sea más fácil seleccionar y actualizar
-        styles: {
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          color: '#333',
-        },
-      },
-      {
-        type: 'button',
-        label: 'Incrementar Contador 1',
-        styles: {
-          display: 'block',
-          width: '100%',
-          margin: '8px 0',
-          padding: '10px',
-          backgroundColor: '#28a745',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        },
-        onClick: incrementCounter1, // Llamamos a la función para incrementar el contador 1
-      },
-      {
-        type: 'button',
-        label: 'Disminuir Contador 1',
-        styles: {
-          display: 'block',
-          width: '100%',
-          margin: '8px 0',
-          padding: '10px',
-          backgroundColor: '#e74c3c',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        },
-        onClick: decrementCounter1, // Llamamos a la función para disminuir el contador 1
-      },
-
-      {
-        type: 'text', // Este es el contenedor donde se muestra el valor del contador 2
-        content: `Contador 2: ${counter2}`,
-        className: 'counter2-text', // Le damos una clase para que sea más fácil seleccionar y actualizar
-        styles: {
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          color: '#333',
-        },
-      },
-      {
-        type: 'button',
-        label: 'Incrementar Contador 2',
-        styles: {
-          display: 'block',
-          width: '100%',
-          margin: '8px 0',
-          padding: '10px',
-          backgroundColor: '#28a745',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        },
-        onClick: incrementCounter2, // Llamamos a la función para incrementar el contador 2
-      },
-      {
-        type: 'button',
-        label: 'Disminuir Contador 2',
-        styles: {
-          display: 'block',
-          width: '100%',
-          margin: '8px 0',
-          padding: '10px',
-          backgroundColor: '#e74c3c',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-        },
-        onClick: decrementCounter2, // Llamamos a la función para disminuir el contador 2
+        content: 'Historial vacío',
       },
     ],
   };

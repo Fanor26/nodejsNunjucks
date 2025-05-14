@@ -174,13 +174,38 @@
 //     ],
 //   };
 // }
-// controllers/uiRoutes/register.js
-import { debugLog } from '../../debug.js';
+// controllers/uiRoutes/register.j}s
 
-// Función factory para crear instancias independientes
-export const RegisterController = () => {
-  // Iniciamos el contador en cero
-  let instanceCount = 0;
+import { debugLog } from '../../debug.js';
+import { withHooks, useState, useEffect } from '../../hooks/index.js';
+
+export const RegisterController = withHooks(() => {
+  const [count, setCount] = useState(0);
+  const [clicksHistory, setClicksHistory] = useState([]);
+
+  // Efecto para actualizar el DOM cuando cambia el contador
+  useEffect(() => {
+    const counterTextElement = document.querySelector('.counter-text');
+    if (counterTextElement) {
+      counterTextElement.textContent = `Clicks: ${count}`;
+    }
+  }, [count]);
+
+  // Efecto para debuggear cuando cambia el historial
+  useEffect(() => {
+    debugLog('Historial actualizado:', clicksHistory);
+  }, [clicksHistory]);
+
+  const handleClick = () => {
+    const newCount = count + 1;
+    setCount(newCount);
+    setClicksHistory((prev) => [...prev, newCount]);
+  };
+
+  const handleReset = () => {
+    setCount(0);
+    setClicksHistory([]);
+  };
 
   return {
     type: 'container',
@@ -192,14 +217,14 @@ export const RegisterController = () => {
     },
     children: [
       {
-        type: 'text', // Mostrar el contador
-        className: 'counter-text', // Asignamos un className
-        content: `Clicks: ${instanceCount}`,
+        type: 'text',
+        className: 'counter-text',
+        content: `Clicks: ${count}`,
         styles: { fontSize: '1.2rem', marginBottom: '15px' },
       },
       {
         type: 'button',
-        className: 'click-button', // Asignamos un className
+        className: 'click-button',
         label: 'Haz clic',
         styles: {
           padding: '10px 20px',
@@ -210,18 +235,11 @@ export const RegisterController = () => {
           cursor: 'pointer',
           marginRight: '10px',
         },
-        onClick: () => {
-          instanceCount++;
-          debugLog(`Contador incrementado a: ${instanceCount}`);
-          // Actualizar el texto del contador
-          document.querySelector(
-            '.counter-text'
-          ).content = `Clicks: ${instanceCount}`;
-        },
+        onClick: handleClick,
       },
       {
         type: 'button',
-        className: 'reset-button', // Asignamos un className
+        className: 'reset-button',
         label: 'Reiniciar',
         styles: {
           padding: '10px 20px',
@@ -231,17 +249,27 @@ export const RegisterController = () => {
           borderRadius: '4px',
           cursor: 'pointer',
         },
-        onClick: () => {
-          debugLog(`Reiniciando contador desde: ${instanceCount}`);
-          instanceCount = 0;
-          // Reiniciar el texto del contador
-          document.querySelector(
-            '.counter-text'
-          ).content = `Clicks: ${instanceCount}`;
-        },
+        onClick: handleReset,
+      },
+      {
+        type: 'container',
+        styles: { marginTop: '20px' },
+        children: [
+          {
+            type: 'text',
+            content: 'Historial:',
+            styles: { fontSize: '1rem', marginBottom: '5px' },
+          },
+          {
+            type: 'list',
+            items: clicksHistory.slice().reverse(),
+            limit: 5,
+            styles: { maxHeight: '100px', overflowY: 'auto' },
+          },
+        ],
       },
     ],
   };
-};
+});
 
 export default RegisterController();

@@ -26,6 +26,10 @@
     "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.2",
+    "@babel/preset-react": "^7.27.1",
+    "babel-loader": "^10.0.0",
     "chokidar": "^4.0.3",
     "css-loader": "^7.1.2",
     "html-loader": "^4.2.0",
