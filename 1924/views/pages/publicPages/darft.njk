@@ -1,0 +1,100 @@
+{# <!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Gestión de Doctores</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+      li {
+        background: #f4f4f4;
+        margin: 5px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      button {
+        margin-left: 10px;
+        padding: 5px;
+        cursor: pointer;
+        border: none;
+        background: red;
+        color: white;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Lista de Doctores</h1>
+
+    <!-- Mensaje de error si no hay doctores -->
+    {% if doctors.length == 0 %}
+    <p>No hay doctores registrados.</p>
+    {% else %}
+    <ul id="doctors-list">
+      {% for doctor in doctors %}
+      <li>
+        {{ doctor.nombre }} - Especialidades:
+        {{ doctor.especialidades | join(", ") }}
+        <button onclick="deleteDoctor('{{ doctor._id }}')">Eliminar</button>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    <script>
+      // Función para eliminar doctor con fetch()
+      const deleteDoctor = async (id) => {
+        try {
+          const response = await fetch(`/api/usuarios/${id}`, {
+            method: 'DELETE',
+          });
+
+          if (!response.ok) {
+            throw new Error('Error eliminando el doctor');
+          }
+
+          location.reload(); // Recarga la página después de eliminar
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
+    </script>
+  </body>
+</html>
+
+{% extends "index.njk" %} {% block content %}
+<h1>Lista de Doctores</h1>
+<ul id="doctors-list">
+  <!-- Aquí se llenarán los doctores con JavaScript -->
+</ul>
+
+<script>
+  // Función para obtener los doctores desde la API
+  const getDoctors = async () => {
+    console.log('Fetching doctors...');
+    try {
+      const response = await fetch('/api/users');
+      if (!response.ok) {
+        throw new Error('No se pudo obtener los doctores');
+      }
+      const doctors = await response.json();
+      console.log('doctors', doctors);
+    } catch (error) {
+      console.error('Error al cargar los doctores:', error);
+    }
+  };
+
+  // Llamamos a la función para obtener los doctores al cargar la página
+  getDoctors();
+</script>
+{% endblock %} #}

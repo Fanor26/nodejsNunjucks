@@ -1,0 +1,152 @@
+{% extends "index.njk" %} {% block content %}
+<h1>Perfil de Usuario</h1>
+<div id="profile-data">
+  <p>Cargando perfil...</p>
+</div>
+
+<!-- Contenedor para los botones dinámicos -->
+<div id="buttons-container"></div>
+
+<script type="module">
+  // Importar la función filterItemData
+  import { filterItemData } from '/js/utils/filterUtils.js';
+  import { CreateButton } from '/js/components/controls/button.js';
+
+  // Función para cargar los datos del perfil
+  async function loadProfile() {
+    try {
+      const response = await fetch('/api/profile');
+      if (!response.ok) {
+        throw new Error('Error al cargar el perfil');
+      }
+
+      const data = await response.json();
+      const user = data.user;
+      console.log('user', user);
+
+      // Guardar los datos del perfil en localStorage para facilitar el acceso
+      localStorage.setItem('userProfile', JSON.stringify(user));
+
+      // Filtrar los datos básicos del perfil (filtrando las referencias)
+      const profileDataHTML = filterItemData(user, [
+        '_id',
+        
+      ])
+        .map(
+          (key) =>
+            `<p><strong>${
+              key.charAt(0).toUpperCase() + key.slice(1)
+            }:</strong> <span id="profile-${key}">${user[key]}</span></p>`
+        )
+        .join('');
+      document.getElementById('profile-data').innerHTML = profileDataHTML;
+
+      // Crear el botón "Actualizar Perfil"
+      const editButton = CreateButton(
+        'Actualizar Perfil',
+        { marginRight: '10px' },
+        enableEditMode
+      );
+      document.getElementById('buttons-container').appendChild(editButton);
+    } catch (error) {
+      console.error('Error:', error);
+      document.getElementById(
+        'profile-data'
+      ).innerHTML = `<p>Error al cargar el perfil: ${error.message}</p>`;
+    }
+  }
+
+  // Función para convertir los campos de texto en campos de formulario (modo de edición)
+  function enableEditMode() {
+    const user = JSON.parse(localStorage.getItem('userProfile'));
+
+    // Limpiar el contenedor de botones
+    document.getElementById('buttons-container').innerHTML = '';
+
+    // Crear el botón "Guardar"
+    const saveButton = CreateButton(
+      'Guardar',
+      { marginRight: '10px' },
+      updateProfile
+    );
+    document.getElementById('buttons-container').appendChild(saveButton);
+
+    // Crear el botón "Cancelar"
+    const cancelButton = CreateButton('Cancelar', {}, disableEditMode);
+    document.getElementById('buttons-container').appendChild(cancelButton);
+
+    // Convertir cada campo de texto en un campo de formulario
+    filterItemData(user, ['_id', 'id', 'cuentas', 'especialidades']).forEach(
+      (key) => {
+        const value = user[key];
+        const spanElement = document.getElementById(`profile-${key}`);
+        spanElement.innerHTML = `<input type="text" id="edit-${key}" value="${value}" />`;
+      }
+    );
+  }
+
+  // Función para desactivar el modo de edición y volver a la vista de solo lectura
+  function disableEditMode() {
+    const user = JSON.parse(localStorage.getItem('userProfile'));
+
+    // Limpiar el contenedor de botones
+    document.getElementById('buttons-container').innerHTML = '';
+
+    // Crear el botón "Actualizar Perfil"
+    const editButton = CreateButton(
+      'Actualizar Perfil',
+      { marginRight: '10px' },
+      enableEditMode
+    );
+    document.getElementById('buttons-container').appendChild(editButton);
+
+    // Restaurar los campos a su estado original (solo lectura)
+    filterItemData(user, ['_id', 'id', 'cuentas', 'especialidades']).forEach(
+      (key) => {
+        const value = user[key];
+        const spanElement = document.getElementById(`profile-${key}`);
+        spanElement.innerHTML = value; // Restaurar el valor original
+      }
+    );
+  }
+
+  // Función para actualizar el perfil
+  async function updateProfile() {
+    const user = JSON.parse(localStorage.getItem('userProfile'));
+    const updatedData = {};
+
+    // Recopilar los datos editados
+    filterItemData(user, ['_id', 'id', 'cuentas', 'especialidades']).forEach(
+      (key) => {
+        updatedData[key] = document.getElementById(`edit-${key}`).value;
+      }
+    );
+
+    try {
+      const response = await fetch('/api/updateProfile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar el perfil');
+      }
+
+      const data = await response.json();
+      alert(data.message);
+      disableEditMode(); // Volver a la vista de solo lectura
+      loadProfile(); // Recargar los datos actualizados del perfil
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.message);
+    }
+  }
+
+  // Cargar los datos del perfil al cargar la página
+  loadProfile();
+</script>
+
+{% endblock %}

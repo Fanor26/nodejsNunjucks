@@ -1,0 +1,76 @@
+{% extends "index.njk" %} {% block content %}
+
+<div>
+  <!-- Usamos el componente Text para el título -->
+  <div id="title-container"></div>
+  <div id="count-container"></div>
+  <div id="buttons-container"></div>
+</div>
+
+<script type="module">
+  import useState from '/js/hooks/useState.js';
+  import { CreateButton } from '/js/components/controls/button.js';
+  import { CreateText } from '/js/components/controls/text.js'; // Importar el componente Text
+
+  // Inicializamos el estado del contador con un valor inicial de 0
+  const [getCount, setCount, subscribe] = useState('counter', 0);
+
+  // Función para actualizar el valor del contador en el DOM
+  const updateCountDisplay = (count) => {
+    const countContainer = document.getElementById('count-container');
+    // Limpiamos el contenedor y agregamos el nuevo texto
+    countContainer.innerHTML = '';
+    const countText = CreateText('span', `Contador: ${count}`, {
+      fontSize: '24px',
+      fontWeight: 'bold',
+      color: 'white',
+    });
+    countContainer.appendChild(countText);
+  };
+
+  // Suscribimos la función de actualización al estado
+  subscribe(updateCountDisplay);
+
+  // Actualizamos el display con el valor inicial
+  updateCountDisplay(getCount());
+
+  // Crear el título usando el componente Text
+  const titleContainer = document.getElementById('title-container');
+  const titleText = CreateText('h1', 'Contador Dinámico', {
+    fontSize: '32px',
+    color: '#007BFF',
+    textAlign: 'center',
+    marginBottom: '20px',
+  });
+  titleContainer.appendChild(titleText);
+
+  // Crear botón "Incrementar"
+  const incrementButton = CreateButton(
+    'Incrementar',
+    {
+      backgroundColor: '#28a745', // Color verde
+      marginRight: '10px', // Espacio entre botones
+    },
+    () => {
+      setCount(getCount() + 1); // Función al hacer clic
+    }
+  );
+
+  // Crear botón "Decrementar"
+  const decrementButton = CreateButton(
+    'Decrementar',
+    {
+      backgroundColor: '#dc3545', // Color rojo
+    },
+    () => {
+      setCount(getCount() - 1); // Función al hacer clic
+    }
+  );
+
+  // Agregar los botones al contenedor
+  const buttonsContainer = document.getElementById('buttons-container');
+  buttonsContainer.appendChild(incrementButton);
+  buttonsContainer.appendChild(decrementButton);
+</script>
+
+{% endblock %}

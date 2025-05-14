@@ -1,0 +1,9 @@
+{% extends "index.njk" %} {% block content %} {%set apiEndpoint = 'service'%}
+<!-- Pasar `apiEndpoint` directamente al script -->
+
+{% set actionData = {
+  typeEndpoint: 'Service',
+  apiSubItem: '',
+  pageNjk: ''
+} %}
+{% include "pages/privatePages/index.njk" %} {% endblock %}

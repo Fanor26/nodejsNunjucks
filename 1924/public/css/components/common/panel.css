@@ -1,0 +1,25 @@
+#panel i {
+  font-size: 22px;
+  margin: 15px 0;
+  cursor: pointer;
+  transition: color 0.2s;
+  color: #ddd;
+}
+
+#panel i:hover {
+  color: #fff;
+}
+
+#panel button {
+  background: #444;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 5px;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 5px;
+}

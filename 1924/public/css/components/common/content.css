@@ -1,0 +1,10 @@
+/* Mostrar scroll solo al pasar el cursor */
+.contentMain {
+  overflow: hidden; /* Scroll oculto por defecto */
+  transition: overflow 0.3s;
+}
+
+/* Cuando el usuario pasa el cursor, el scroll aparece */
+.contentMain:hover {
+  overflow: auto;
+}

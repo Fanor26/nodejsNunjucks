@@ -1,0 +1,11 @@
+{% extends "index.njk" %} {% block content %}
+
+<!-- Inyectar el tipo de endpoint como un valor global -->
+
+{% set actionData = {
+  typeEndpoint: 'Specialty',
+  apiSubItem: 'servicios',
+  pageNjk: ''
+} %}
+<!-- Pasar `apiEndpoint` directamente al script -->
+{% include "pages/privatePages/index.njk" %} {% endblock %}

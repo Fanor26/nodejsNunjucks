@@ -1,0 +1,49 @@
+{% extends "index.njk" %} {% block content %}
+
+<div id="container"></div>
+
+<script type="module">
+  import { createDropdown } from '/js/components/common/dropdown.js';
+  import { menuItems } from '/js/utils/buttonsConfig.js';
+  function renderDropdownMenu() {
+    const container = document.getElementById('container');
+
+    if (!container) {
+      console.log('❌ No se encontró el contenedor');
+      return;
+    }
+
+    console.log('✅ Contenedor encontrado');
+
+    const title = document.createElement('h2');
+    title.textContent = '📂 Menú Desplegable';
+    title.style.color = 'white';
+
+    const button = document.createElement('button');
+    button.textContent = 'Abrir Menú';
+    button.style.margin = '10px 0';
+
+    const menuWrapper = document.createElement('div');
+    menuWrapper.style.display = 'none';
+    menuWrapper.style.background = '#222';
+    menuWrapper.style.color = 'white';
+    menuWrapper.style.padding = '10px';
+    menuWrapper.style.border = '1px solid #444';
+
+    const dropdown = createDropdown(menuItems);
+    menuWrapper.appendChild(dropdown);
+
+    button.addEventListener('click', () => {
+      menuWrapper.style.display =
+        menuWrapper.style.display === 'none' ? 'block' : 'none';
+      console.log('🟢 Toggle menú');
+    });
+
+    container.appendChild(title);
+    container.appendChild(button);
+    container.appendChild(menuWrapper);
+  }
+
+  renderDropdownMenu();
+</script>
+{% endblock %}
