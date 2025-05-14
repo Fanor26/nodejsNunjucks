@@ -1,3 +1,6 @@
+import Button from './button.js';
+import Popper from './popper.js';
+
 const DataGrid = {
   create: (config) => {
     // Contenedor principal
@@ -39,7 +42,7 @@ const DataGrid = {
       ...config.titleStyles,
     });
 
-    // Contenedor de controles (buscador, iconos)
+    // Controles: buscador, iconos
     const controlsContainer = document.createElement('div');
     Object.assign(controlsContainer.style, {
       display: 'flex',
@@ -79,50 +82,58 @@ const DataGrid = {
     searchContainer.appendChild(searchInput);
     searchContainer.appendChild(searchIcon);
 
-    // Botón de filtro
-    const filterButton = document.createElement('button');
-    filterButton.innerHTML = config.filterIcon || '⚙️';
-    filterButton.title = 'Filtrar';
-    Object.assign(filterButton.style, {
-      background: 'none',
-      border: 'none',
-      fontSize: '18px',
-      cursor: 'pointer',
-      padding: '6px',
-      borderRadius: '4px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...config.filterButtonStyles,
+    // // Botón de filtro reutilizando Button
+    // const filterButton = Button.create({
+    //   label: '',
+    //   icon: config.filterIcon || '⚙️',
+    //   buttonType: 'text',
+    //   styles: {
+    //     padding: '6px',
+    //     borderRadius: '4px',
+    //     fontSize: '18px',
+    //     ...config.filterButtonStyles,
+    //   },
+    //   onClick: config.onFilter || (() => console.log('Filtrar presionado')),
+    // });
+    const popperInstance = Popper.create({
+      icon: config.filterIcon || '⚙️',
+
+      placement: 'bottom-start', // Cambia esta propiedad según necesites
+      items: [
+        { text: 'Filtro 1', onClick: () => console.log('Filtro 1 activado') },
+        { text: 'Filtro 2', onClick: () => console.log('Filtro 2 activado') },
+      ],
     });
 
-    // Botón de agregar
-    const addButton = document.createElement('button');
-    addButton.innerHTML = config.addIcon || '➕';
-    addButton.title = 'Agregar nuevo';
-    Object.assign(addButton.style, {
-      background: 'none',
-      border: 'none',
-      fontSize: '18px',
-      cursor: 'pointer',
-      padding: '6px',
-      borderRadius: '4px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      ...config.addButtonStyles,
+    const plusIcon = `
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+  <path d="M12 5v14M5 12h14"/>
+</svg>`;
+
+    const addButton = Button.create({
+      icon: plusIcon,
+
+      buttonType: 'primary',
+      styles: {
+        backgroundColor: '#4CAF50', // Verde para "Agregar"
+        fontSize: '18px',
+        padding: '6px',
+        borderRadius: '6px',
+        ...config.addButtonStyles, // Permite override externo
+      },
+      onClick: config.onAdd || (() => console.log('Agregar nuevo presionado')),
     });
 
     // Construcción de la cabecera
     controlsContainer.appendChild(searchContainer);
-    controlsContainer.appendChild(filterButton);
+    controlsContainer.appendChild(popperInstance);
     controlsContainer.appendChild(addButton);
 
     headerContainer.appendChild(titleElement);
     headerContainer.appendChild(controlsContainer);
     container.appendChild(headerContainer);
 
-    // Tabla (código existente)
+    // Tabla
     const table = document.createElement('table');
     table.className = 'data-grid-table';
     Object.assign(table.style, {
@@ -145,12 +156,10 @@ const DataGrid = {
     });
     table.appendChild(colgroup);
 
-    // Cabecera de columnas (sticky)
+    // Cabecera de columnas
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    headerRow.className = 'header-row';
-
-    config.columns.forEach((col, index) => {
+    config.columns.forEach((col) => {
       const th = document.createElement('th');
       th.textContent = col.title;
       Object.assign(th.style, {
@@ -168,24 +177,18 @@ const DataGrid = {
       });
       headerRow.appendChild(th);
     });
-
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
     // Cuerpo de la tabla
     const tbody = document.createElement('tbody');
-
     config.data.forEach((row, rowIndex) => {
       const tr = document.createElement('tr');
       tr.className = `data-row ${rowIndex % 2 === 0 ? 'even' : 'odd'}`;
 
-      config.columns.forEach((col, colIndex) => {
+      config.columns.forEach((col) => {
         const td = document.createElement('td');
-        const value = col.formatter
-          ? col.formatter(row[col.field], row)
-          : row[col.field];
-
-        td.textContent = value;
+        td.textContent = row[col.field];
         Object.assign(td.style, {
           padding: '10px 16px',
           borderBottom: '1px solid #e0e0e0',
@@ -193,25 +196,10 @@ const DataGrid = {
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           backgroundColor:
-            rowIndex % 2 === 0
-              ? config.evenRowColor || '#f8f9fa'
-              : config.oddRowColor || 'white',
+            rowIndex % 2 === 0 ? config.evenRowColor : config.oddRowColor,
           ...col.cellStyles,
-          ...(col.dynamicStyles ? col.dynamicStyles(row[col.field], row) : {}),
         });
-
         tr.appendChild(td);
-      });
-
-      // Efecto hover
-      tr.addEventListener('mouseenter', () => {
-        tr.style.backgroundColor = '#e8f4fc';
-      });
-      tr.addEventListener('mouseleave', () => {
-        tr.style.backgroundColor =
-          rowIndex % 2 === 0
-            ? config.evenRowColor || '#f8f9fa'
-            : config.oddRowColor || 'white';
       });
 
       tbody.appendChild(tr);
@@ -228,28 +216,6 @@ const DataGrid = {
     });
     tableContainer.appendChild(table);
     container.appendChild(tableContainer);
-
-    // Eventos y funcionalidad
-    searchInput.addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase();
-      const rows = tbody.querySelectorAll('tr');
-
-      rows.forEach((row) => {
-        const cells = row.querySelectorAll('td');
-        const rowText = Array.from(cells)
-          .map((cell) => cell.textContent.toLowerCase())
-          .join(' ');
-        row.style.display = rowText.includes(searchTerm) ? '' : 'none';
-      });
-    });
-
-    filterButton.addEventListener('click', () => {
-      if (config.onFilter) config.onFilter();
-    });
-
-    addButton.addEventListener('click', () => {
-      if (config.onAdd) config.onAdd();
-    });
 
     return container;
   },

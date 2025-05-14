@@ -57,5 +57,8 @@ export default function specialty() {
       maxHeight: '500px',
       overflowY: 'auto',
     },
+    onAdd: () => {
+      alert('add row');
+    },
   };
 }
