@@ -78,23 +78,22 @@ const DataGrid = {
       pointerEvents: 'none',
       opacity: '0.6',
     });
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+
+      tbody.querySelectorAll('tr').forEach((row) => {
+        const rowText = row.textContent.toLowerCase();
+        if (rowText.includes(searchTerm)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
 
     searchContainer.appendChild(searchInput);
     searchContainer.appendChild(searchIcon);
 
-    // // Botón de filtro reutilizando Button
-    // const filterButton = Button.create({
-    //   label: '',
-    //   icon: config.filterIcon || '⚙️',
-    //   buttonType: 'text',
-    //   styles: {
-    //     padding: '6px',
-    //     borderRadius: '4px',
-    //     fontSize: '18px',
-    //     ...config.filterButtonStyles,
-    //   },
-    //   onClick: config.onFilter || (() => console.log('Filtrar presionado')),
-    // });
     const popperInstance = Popper.create({
       icon: config.filterIcon || '⚙️',
 
