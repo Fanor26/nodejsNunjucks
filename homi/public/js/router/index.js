@@ -1,7 +1,7 @@
 import { store } from '../store/index.js';
 import { debugLog } from '../debug.js';
 import '../../css/app.css';
-import { App } from './routehandler.js';
+import { App } from '../app.js';
 export const getCurrentPath = () => window.location.pathname;
 
 export const updateBrowserPath = (path) => {

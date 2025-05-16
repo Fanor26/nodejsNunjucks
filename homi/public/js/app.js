@@ -36,7 +36,7 @@ export const App = async (path) => {
       const splitter = container?.querySelector('.splitter'); // el splitter insertado
 
       if (container && splitter) {
-        makeSplitterResizable(container, splitter, { minWidth: 150 });
+        makeSplitterResizable(container, splitter, { minWidth: 0 });
       }
     });
   } catch (error) {
