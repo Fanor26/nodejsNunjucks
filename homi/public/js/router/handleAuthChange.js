@@ -1,6 +1,6 @@
 import { loadRoutes } from '../services/loadRoutes.js';
 import { store } from '../store/index.js';
-import { handleRouteChange } from './routerSingle.js';
+import { handleRouteChange } from './index.js';
 
 let prevIsAuthenticated = false;
 

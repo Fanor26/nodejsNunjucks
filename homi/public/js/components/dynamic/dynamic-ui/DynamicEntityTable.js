@@ -7,7 +7,7 @@ function createContainerConfig(entityType) {
     type: 'div',
     className: `entity-table-container-${entityType.toLowerCase()}`,
     styles: {
-      padding: '2rem',
+      padding: '1rem',
       backgroundColor: '#fefefe',
       borderRadius: '12px',
       boxShadow: '0 2px 8px rgba(0,0,0,0.1)',

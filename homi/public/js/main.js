@@ -4,18 +4,17 @@ import { createDebugUI } from './debug.js';
 import '../css/styles.css';
 
 import { store } from './store/index.js';
-import { debugLog } from './debug.js';
+
 import { loadRoutes } from './services/loadRoutes.js';
-import {
-  findRouteByPath,
-  getCurrentPath,
-  handleRouteChange,
-} from './router/routerSingle.js';
+
 import { checkSession } from './actions/authActions.js';
 
 // Importamos las funciones del Tree Viewer
 import { renderTreeViewer, safeUpdateTreeViewer } from './redux/treeView.js';
-const initializeApp = async () => {
+import { getCurrentPath } from './router/index.js';
+import { App } from './app.js';
+
+const initializeHomi = async () => {
   try {
     // Paso 1: Crea la interfaz de depuración si es necesario
     createDebugUI();
@@ -31,19 +30,19 @@ const initializeApp = async () => {
     // document.title = currentPath?.title || 'Mi App'; // Actualiza el título correctamente
     // Paso 2: Carga las rutas
     await loadRoutes();
-    // Forzamos el cambio de ruta con la información de autenticación actualizada
-    await handleRouteChange(currentPath);
+    //inicializamos App con navigation personlice
+    await App(currentPath);
 
     // Escucha los cambios de estado de autenticación y actualiza las rutas en consecuencia
-    let previousAuthState = store.getState().auth.isAuthenticated;
+    // let previousAuthState = store.getState().auth.isAuthenticated;
 
     store.subscribe(() => {
-      const currentAuthState = store.getState().auth.isAuthenticated;
-      if (currentAuthState !== previousAuthState) {
-        previousAuthState = currentAuthState;
-        const currentPath = getCurrentPath();
-        handleRouteChange(currentPath);
-      }
+      // const currentAuthState = store.getState().auth.isAuthenticated;
+      // if (currentAuthState !== previousAuthState) {
+      //   previousAuthState = currentAuthState;
+      //   const currentPath = getCurrentPath();
+      //   App(currentPath);
+      // }
 
       // Actualiza el árbol de estado visualmente
       safeUpdateTreeViewer(store.getState());
@@ -57,4 +56,4 @@ const initializeApp = async () => {
   }
 };
 
-domReady.then(initializeApp);
+domReady.then(initializeHomi);

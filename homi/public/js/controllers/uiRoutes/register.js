@@ -1,6 +1,7 @@
 import { register } from '../../actions/authActions.js';
 import { debugLog } from '../../debug.js';
-import { handleRouteChange } from '../../router/routerSingle.js';
+import { navigateTo } from '../../router/index.js';
+
 import { store } from '../../store/index.js';
 
 export default function registerController() {
@@ -54,7 +55,7 @@ export default function registerController() {
 
       if (auth.isAuthenticated) {
         debugLog('✅ Registro exitoso, redirigiendo a /dashboard');
-        handleRouteChange('/dashboard'); // 🔥 Aquí se hace bien la redirección + refresh visual
+        navigateTo('/dashboard'); // 🔥 Aquí se hace bien la redirección + refresh visual
         unsubscribe();
       } else if (auth.error) {
         debugLog('❗ Error en registro', auth.error);

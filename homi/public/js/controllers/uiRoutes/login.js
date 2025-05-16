@@ -1,6 +1,7 @@
 import { login } from '../../actions/authActions.js';
 import { debugLog } from '../../debug.js';
-import { handleRouteChange } from '../../router/routerSingle.js';
+import { navigateTo } from '../../router/index.js';
+
 import { loadRoutes } from '../../services/loadRoutes.js';
 import { store } from '../../store/index.js';
 
@@ -28,7 +29,7 @@ export default function Login() {
   // ✅ Esta sí es async fuera del subscribe
   const handleSuccessfulLogin = async () => {
     await loadRoutes(); // 🚀 Recargar rutas privadas
-    await handleRouteChange('/dashboard'); // ✅ Redirigir
+    await navigateTo('/dashboard'); // ✅ Redirigir
   };
 
   const handleLogin = async () => {

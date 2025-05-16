@@ -1,9 +1,10 @@
 import { debugLog } from '../../debug.js';
-import { handleRouteChange } from '../../router/routerSingle.js';
+
 import { store } from '../../store/index.js';
 import { logout } from '../../actions/authActions.js';
 import { navbarStyles } from './utils/styles/navbarStyles.js';
 import { loadRoutes } from '../../services/loadRoutes.js';
+import { navigateTo } from '../../router/index.js';
 
 export const createNavbar = (
   menuItems = [],
@@ -80,7 +81,7 @@ export const createNavbar = (
           onClick: async () => {
             await logout();
             await loadRoutes();
-            handleRouteChange('/login');
+            navigateTo('/login');
           },
         },
       ]

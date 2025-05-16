@@ -1,6 +1,6 @@
 import { routeControllers } from '../../controllers/uiRoutes/index.js';
 import { debugLog } from '../../debug.js';
-import { findRouteByPath } from '../../router/routerSingle.js';
+import { findRouteByPath } from '../../utils/filter/index.js';
 
 export const createContent = (routes, currentPath) => {
   const defaultContent = {
