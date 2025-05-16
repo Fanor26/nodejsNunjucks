@@ -80,7 +80,7 @@ export default function UserTable() {
     const tableContainer = document.querySelector('.users-table-container');
 
     try {
-      const res = await fetch('/api/getAll?type=Doctor');
+      const res = await fetch('/api/getAll?type=User');
       const json = await res.json();
       debugLog('sdassssss', json.data);
       if (!json.success || !Array.isArray(json.data)) {
