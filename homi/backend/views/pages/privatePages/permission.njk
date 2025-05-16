@@ -1,0 +1,6 @@
+{% extends "index.njk" %} {% block content %}
+
+<!-- Inyectar el tipo de endpoint como un valor global -->
+
+{%set typeEndpoint = 'Permission'%} {%
+include "pages/privatePages/index.njk" %} {% endblock %}

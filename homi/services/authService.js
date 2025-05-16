@@ -1,4 +1,4 @@
-import User from '../models/userModel.js';
+import { User } from '../models/userModel.js';
 
 export const sanitizeUser = (user) => {
   if (!user) return null;

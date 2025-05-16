@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>{{ title }}</title>
+   
+  </head>
+  <body>
+  
+
+    <!-- Footer -->
+    <div id="sidebar"></div>
+    <!-- Menú de rutas dinámicas -->
+    <div id="main">
+      <nav id="navbar">
+        <!-- Las rutas se cargarán dinámicamente aquí -->
+      </nav>
+
+      <!-- Aquí centramos el spinner -->
+      <div id="content">
+        {% block content %}
+        <!-- Aquí irá el contenido dinámico -->
+
+        {% endblock %}
+      </div>
+    
+
+      <p
+      id="sessionTime"
+      style="
+        position: fixed;
+        bottom: 0px;
+        font-size: 14px;
+        color: rgb(255, 255, 255);
+        z-index: 1500;
+      "
+    ></p>
+      <footer id="footer"></footer>
+          <script
+      type="module"
+      src="/dist/bundle.js"
+      defer=""
+    ></script>
+  </body>
+</html>

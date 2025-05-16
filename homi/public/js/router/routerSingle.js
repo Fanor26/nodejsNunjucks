@@ -2,14 +2,14 @@ import { initLayout } from '../init/initLayout.js';
 import { createLayoutPage } from '../layouts/layoutPage/index.js';
 import { store } from '../store/index.js';
 import { debugLog } from '../debug.js';
-
+import '../../css/app.css';
 export const getCurrentPath = () => window.location.pathname;
 
 export const updateBrowserPath = (path) => {
   window.history.pushState({}, '', path);
   store.dispatch({ type: 'SET_CURRENT_PATH', payload: path });
 };
-const findRouteByPath = (routes, path) => {
+export const findRouteByPath = (routes, path) => {
   let exactMatch = null;
   let partialMatch = null;
 
@@ -34,6 +34,7 @@ const findRouteByPath = (routes, path) => {
 
   return exactMatch || partialMatch || null;
 };
+
 export const handleRouteChange = async (path) => {
   debugLog('handleRouteChange llamado con path:', path);
 
@@ -52,7 +53,7 @@ export const handleRouteChange = async (path) => {
       );
       return handleRouteChange(firstAvailableRoute);
     }
-
+    document.title = currentRoute.title || currentRoute.path;
     // 🚀 Solo usas las rutas ya guardadas en el store
     const layout = createLayoutPage(routing.routes, handleRouteChange, path);
     initLayout([layout], '#app');

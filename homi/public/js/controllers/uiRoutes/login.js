@@ -4,7 +4,7 @@ import { handleRouteChange } from '../../router/routerSingle.js';
 import { loadRoutes } from '../../services/loadRoutes.js';
 import { store } from '../../store/index.js';
 
-export default function loginController() {
+export default function Login() {
   let email = '';
   let password = '';
 

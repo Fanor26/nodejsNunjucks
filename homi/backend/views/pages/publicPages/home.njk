@@ -1,0 +1,84 @@
+{% extends "index.njk" %} {% block content %}
+<!-- Contenedor general para envolver todos los contenedores -->
+<h1>{{ pageTitle }}</h1>
+
+<!-- Contenedor principal donde se insertarán los contenedores -->
+<div id="mainContainer"></div>
+
+<script type="module">
+  // Importar la función JavaScript de crear contenedor
+  import { createContainer } from '/js/components/common/container.js';
+
+  // Datos de los contenedores (puedes adaptarlos como necesites)
+  const containerData = [
+    {
+      backgroundColor: 'lightblue',
+      width: '80%',
+      height: '500px',
+      contentBgColor: 'white',
+      title: 'Contenedor 1',
+      footerText: 'Footer 1',
+    },
+    {
+      backgroundColor: 'lightgreen',
+      width: '70%',
+      height: '400px',
+      contentBgColor: 'lightgray',
+      title: 'Contenedor 2',
+      footerText: 'Footer 2',
+    },
+    {
+      backgroundColor: 'lightcoral',
+      width: '90%',
+      height: '450px',
+      contentBgColor: 'white',
+      title: 'Contenedor 3',
+      footerText: 'Footer 3',
+    },
+    {
+      backgroundColor: 'lightyellow',
+      width: '85%',
+      height: '480px',
+      contentBgColor: 'white',
+      title: 'Contenedor 4',
+      footerText: 'Footer 4',
+    },
+    {
+      backgroundColor: 'lightpink',
+      width: '75%',
+      height: '460px',
+      contentBgColor: 'white',
+      title: 'Contenedor 5',
+      footerText: 'Footer 5',
+    },
+    {
+      backgroundColor: 'lightseagreen',
+      width: '80%',
+      height: '500px',
+      contentBgColor: 'white',
+      title: 'Contenedor 6',
+      footerText: 'Footer 6',
+    },
+  ];
+
+  // Crear un contenedor general para envolver todos los demás contenedores
+  const mainContainer = document.getElementById('mainContainer');
+
+  // Generar los contenedores dinámicamente y agregarlos al contenedor principal
+  containerData.forEach((data, index) => {
+    let container = createContainer(
+      index + 1, // Usar el índice (1, 2, 3, ...)
+      data.backgroundColor,
+      data.width,
+      data.height,
+      data.contentBgColor,
+      data.title,
+      data.footerText
+    );
+
+    // Añadir cada contenedor al mainContainer
+    mainContainer.appendChild(container);
+  });
+</script>
+
+{% endblock %}

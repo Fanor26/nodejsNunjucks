@@ -1,19 +1,23 @@
- // En tu elementTypes.js (JSON type)
-  const Json ={
-    create: (config) => {
+// En tu elementTypes.js (JSON type)
+const Json = {
+  create: (config) => {
     const element = document.createElement('pre');
     element.dataset.type = 'json';
-    
+
     // Guardar configuración API en el elemento
     if (config.apiConfig) {
       element.apiConfig = config.apiConfig;
     }
-    
+
     // Método para actualizar contenido
     element.updateContent = () => {
-      element.textContent = JSON.stringify(element.data || config.data || {}, null, 2);
+      element.textContent = JSON.stringify(
+        element.data || config.data || {},
+        null,
+        2
+      );
     };
-    
+
     // Cargar datos iniciales
     const loadData = async () => {
       if (config.apiConfig) {
@@ -24,7 +28,7 @@
           element.data = { error: error.message };
         }
         element.updateContent();
-        
+
         // Actualizar periódicamente si está configurado
         if (config.apiConfig.refreshInterval) {
           setInterval(loadData, config.apiConfig.refreshInterval);
@@ -34,9 +38,9 @@
         element.updateContent();
       }
     };
-    
+
     loadData();
-    
+
     Object.assign(element.style, {
       fontFamily: 'monospace',
       backgroundColor: 'greenYellow',
@@ -44,11 +48,11 @@
       borderRadius: '4px',
       overflow: 'auto',
       margin: '0',
-      ...config.styles
+      ...config.styles,
     });
-    
-    return element;
-  }
-  }
 
-  export default Json
+    return element;
+  },
+};
+
+export default Json;

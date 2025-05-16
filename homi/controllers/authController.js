@@ -1,6 +1,6 @@
 import passport from 'passport';
 import bcrypt from 'bcrypt';
-import User from '../models/userModel.js';
+
 import * as authService from '../services/authService.js';
 import * as authValidator from '../validators/authValidator.js';
 import { serialize } from 'cookie'; // Librería para manejar cookies

@@ -9,7 +9,6 @@ import cors from 'cors';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { connectDB } from './config/database.js';
-
 import passport from 'passport';
 import './config/passport.js';
 import nunjucks from 'nunjucks';
@@ -17,8 +16,11 @@ import webRoutes from './routes/webRoutes.js';
 import apiRoutes from './routes/apiRoutes.js';
 import crudRoutes from './routes/crudRoutes.js';
 import authRoutes from './routes/authRoutes.js';
-
+import crudItems from './backend/routes/crudRoutes.js';
 dotenv.config();
+import fs from 'fs';
+
+// 📦 Cargar JSON manualmente (sin assert)
 
 const app = express();
 const server = http.createServer(app);
@@ -29,16 +31,19 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
 
 await connectDB();
-
+const routesConfig = JSON.parse(
+  fs.readFileSync(path.join(__dirname, './config/routes.json'), 'utf-8')
+);
 // 🟢 CORS PRIMERO (antes de sesiones, rutas, etc)
 app.use(
   cors({
-    origin:
-      'https://4000-fanor26-nodejsnunjucks-8t0pq5uy20b.ws-us118.gitpod.io', // Frontend URL
-    credentials: true, // ✅ permite cookies
+    origin: [
+      'https://15000-fanor26-nodejsnunjucks-12s16nkk8mb.ws-us118.gitpod.io',
+      'https://4000-fanor19481956-nunjucks-rv5k15v8nef.ws-us118.gitpod.io',
+    ],
+    credentials: true, // ✅ permite enviar cookies y encabezados de autenticación
   })
 );
-
 // 🛡️ CSP nonce
 app.use((req, res, next) => {
   const nonce = crypto.randomBytes(16).toString('base64');
@@ -112,7 +117,7 @@ app.use(helmet());
 
 // 🌐 Rutas
 app.use('/webRoutes', webRoutes);
-app.use('/api', apiRoutes);
+app.use('/api', apiRoutes, crudItems);
 app.use('/auth', authRoutes);
 app.use('/crud', crudRoutes);
 
@@ -124,17 +129,32 @@ app.get('/', (req, res) => {
     return res.redirect('/home');
   }
 });
-// 4) Ahora sí, tu logger
-// Tras setup de session & passport
-
-// Catch-all
+// Función para buscar la ruta por path
+const findRouteByPath = (routes, path) => {
+  for (const route of routes) {
+    if (route.path === path) return route;
+    if (route.children) {
+      const found = findRouteByPath(route.children, path);
+      if (found) return found;
+    }
+  }
+  return null;
+};
 app.get('*', (req, res) => {
+  const currentRoute = findRouteByPath(routesConfig, req.path);
+  let currentTitle = currentRoute?.title || 'Mi App';
+
+  if (req.user) {
+    currentTitle = `${currentTitle} | ${req.user.username}`;
+  }
+
   res.render('layout.njk', {
-    title: 'Mi Aplicación',
     nonce: res.locals.nonce,
+    // title: currentTitle,
     scriptPath:
       process.env.NODE_ENV === 'production' ? 'bundle.min.js' : 'js/main.js',
     env: JSON.stringify({ NODE_ENV: process.env.NODE_ENV }),
+    user: req.user,
   });
 });
 

@@ -24,7 +24,7 @@ export const login = async (credentials) => {
 
   try {
     const response = await fetch(
-      'https://4000-fanor26-nodejsnunjucks-8t0pq5uy20b.ws-us118.gitpod.io/auth/login',
+      'https://15000-fanor26-nodejsnunjucks-12s16nkk8mb.ws-us118.gitpod.io/auth/login',
       {
         method: 'POST',
         credentials: 'include', // 🔴 sin esto NO se envía ni recibe la cookie connect.sid

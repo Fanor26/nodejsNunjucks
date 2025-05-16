@@ -23,7 +23,10 @@ import Select from './select.js';
 import Checkbox from './checkbox.js';
 import Alert from './alert.js';
 import Snackbar from './snackbar.js';
+import Box from './box.js';
+import Div from './div.js';
 export const ELEMENT_TYPES = {
+  BOX: Box,
   SNACKBAR: Snackbar,
   FORM: Form,
   ALERT: Alert,
@@ -49,10 +52,11 @@ export const ELEMENT_TYPES = {
   TABLE: Table,
   HTML: Html,
   TERMINAL: Terminal,
+  DIV: Div,
 };
 
 export const getElementType = (type) => {
-  return ELEMENT_TYPES[type?.toUpperCase()] || ELEMENT_TYPES.TEXT;
+  return ELEMENT_TYPES[type?.toUpperCase()] || ELEMENT_TYPES.DIV;
 };
 
 export const createStandaloneComponent = (type, config = {}) => {

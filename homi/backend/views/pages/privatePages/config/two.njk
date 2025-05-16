@@ -1,0 +1,40 @@
+{% extends "index.njk" %} {% block content %}
+
+<div id="container"></div>
+
+<script type="module">
+  import { createDropdown } from '/js/components/common/dropdown.js';
+  import { menuItems } from '/js/utils/buttonsConfig.js';
+
+  function renderDropdownMenu() {
+    const container = document.getElementById('container');
+
+    if (!container) {
+      console.log('❌ No se encontró el contenedor');
+      return;
+    }
+
+    console.log('✅ Contenedor encontrado');
+
+    const title = document.createElement('h2');
+    title.textContent = '📂 Menú Desplegable';
+    title.style.color = 'white';
+
+    const menuWrapper = document.createElement('div');
+
+    menuWrapper.style.color = 'white';
+    menuWrapper.style.padding = '10px';
+    menuWrapper.style.border = '1px solid #444';
+
+    const dropdown = createDropdown(menuItems);
+    menuWrapper.appendChild(dropdown);
+
+    container.appendChild(title);
+    // container.appendChild(button); // Ya no es necesario
+    container.appendChild(menuWrapper);
+  }
+
+  renderDropdownMenu();
+</script>
+
+{% endblock %}

@@ -1,35 +1,35 @@
 [
   {
     "path": "/home",
-    "view": "home.njk",
+    "view": "publicPages/home.njk",
     "title": "Inicio",
     "alias": "inicio",
     "mdname": "Público",
     "private": false,
     "children": [
       {
-        "path": "/specialties",
+        "path": "specialties",
         "title": "Especialidades",
         "alias": "especialidades",
         "view": "specialties.njk",
         "private": false,
         "children": [
           {
-            "path": "/dental",
+            "path": "dental",
             "title": "Dental",
             "alias": "dental",
             "view": "dental.njk",
             "private": false
           },
           {
-            "path": "/medical",
+            "path": "medical",
             "title": "Medical",
             "alias": "medical",
             "view": "medical.njk",
             "private": false,
             "children": [
               {
-                "path": "/adiology",
+                "path": "radiology",
                 "title": "Radiología",
                 "alias": "radiologia",
                 "view": "radiology.njk",
@@ -65,7 +65,7 @@
     "mdname": "Autenticación",
     "private": false
   },
- {
+  {
     "path": "/dashboard",
     "view": "dashboard/index.njk",
     "title": "Dashboard",
@@ -96,6 +96,12 @@
         ]
       }
     ]
+  },
+  {
+    "path": "/specialties",
+    "title": "Especialidades",
+    "alias": "especialidades",
+    "view": "specialties.njk",
+    "private": true
   }
 ]
-

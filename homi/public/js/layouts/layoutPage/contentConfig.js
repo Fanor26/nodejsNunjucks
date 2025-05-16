@@ -1,7 +1,8 @@
 import { routeControllers } from '../../controllers/uiRoutes/index.js';
 import { debugLog } from '../../debug.js';
+import { findRouteByPath } from '../../router/routerSingle.js';
 
-export const createContent = (routes,  currentPath) => {
+export const createContent = (routes, currentPath) => {
   const defaultContent = {
     type: 'text',
     content: 'Contenido no disponible',
@@ -17,10 +18,10 @@ export const createContent = (routes,  currentPath) => {
       children: [defaultContent],
     };
   }
-
+  const currentRoute = findRouteByPath(routes, currentPath);
   // Obtener contenido inicial
   try {
-    const controller = routeControllers[currentPath];
+    const controller = routeControllers[currentRoute.title];
     const content =
       typeof controller === 'function'
         ? controller() // Removed refresh parameter since it's not needed

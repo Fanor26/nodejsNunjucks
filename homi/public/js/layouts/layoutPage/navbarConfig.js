@@ -7,7 +7,7 @@ import { loadRoutes } from '../../services/loadRoutes.js';
 
 export const createNavbar = (
   menuItems = [],
-  onRouteClick = () => {},
+  onRouteClick,
   currentPath = '/'
 ) => {
   debugLog('Rutas cargadas para Navbar:', menuItems);
@@ -15,7 +15,7 @@ export const createNavbar = (
   // Estado de autenticación
   const { auth } = store.getState();
   const { user, session } = auth || {};
-  const isAuthenticated = Boolean(user);
+  const isAuthenticated = auth.isAuthenticated;
   const displayName =
     user?.displayName ||
     user?.name ||

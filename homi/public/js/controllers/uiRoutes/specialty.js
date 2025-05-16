@@ -1,7 +1,23 @@
 export default function specialty() {
+  const baseData = [
+    { id: 1, specialty: 'Cardiología', doctors: 5, availability: 'Alta' },
+    { id: 2, specialty: 'Pediatría', doctors: 8, availability: 'Media' },
+    { id: 3, specialty: 'Neurología', doctors: 3, availability: 'Baja' },
+  ];
+
+  // Generar 40 filas adicionales ejemplo
+  for (let i = 4; i <= 43; i++) {
+    baseData.push({
+      id: i,
+      specialty: `Especialidad ${i}`,
+      doctors: Math.floor(Math.random() * 10) + 1,
+      availability: ['Alta', 'Media', 'Baja'][Math.floor(Math.random() * 3)],
+    });
+  }
+
   return {
     type: 'datagrid',
-    minWidth: '600px', // Ancho mínimo para contenido amplio
+    minWidth: '600px',
     columns: [
       {
         field: 'id',
@@ -15,7 +31,7 @@ export default function specialty() {
         field: 'specialty',
         title: 'Especialidad Médica',
         minWidth: '200px',
-        width: '1fr', // Columna flexible
+        width: '1fr',
         cellStyles: { fontWeight: '500' },
       },
       {
@@ -46,11 +62,7 @@ export default function specialty() {
         }),
       },
     ],
-    data: [
-      { id: 1, specialty: 'Cardiología', doctors: 5, availability: 'Alta' },
-      { id: 2, specialty: 'Pediatría', doctors: 8, availability: 'Media' },
-      { id: 3, specialty: 'Neurología', doctors: 3, availability: 'Baja' },
-    ],
+    data: baseData,
     evenRowColor: '#f8f9fa',
     oddRowColor: '#ffffff',
     containerStyles: {

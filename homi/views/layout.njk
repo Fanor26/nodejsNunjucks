@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script
-  type="module"
-  nonce="{{ nonce }}"
-  src="/{{ scriptPath }}"
-></script>
-{# <link rel="stylesheet" href="/css/styles.css" nonce="{{ nonce }}"> #}
-<title>{{ title }}</title>
-  
-</head>
-<body>
-  <div id="app">
-
- 
-  </div>
-  <script
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Cargando…</title>
+    <style>
+      /* Oculta todo hasta que removamos esta clase */
+      .js-loading body {
+        visibility: hidden;
+      }
+    </style>
+  </head>
+  <body class="js-loading">
+    <div id="app"></div>
+    <script
       type="module"
       nonce="{{ nonce }}"
       src="/{{ scriptPath }}"
     ></script>
-</body>
+  </body>
 </html>

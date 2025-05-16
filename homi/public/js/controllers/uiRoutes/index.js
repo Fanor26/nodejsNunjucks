@@ -10,14 +10,14 @@ import Dental from './dental.js';
 import Radiology from './radiology.js';
 
 export const routeControllers = {
-  '/home': home,
-  '/about': about,
-  '/login': loginController,
-  '/register': RegisterController,
-  '/dashboard': dashboard,
-  '/dashboard/profile': dashboardProfile,
-  '/home/specialties': Specialty,
-  '/home/specialties/dental': Dental,
-  '/home/specialties/medical': SpecialtyMedical,
-  '/home/specialties/medical/adiology': Radiology,
+  Inicio: home,
+  'Sobre Nosotros': about,
+  'Iniciar Sesión': loginController,
+  Registrarse: RegisterController,
+  Dashboard: dashboard,
+  perfi: dashboardProfile,
+  Especialidades: Specialty,
+  Dental: Dental,
+  Medical: SpecialtyMedical,
+  Radiología: Radiology,
 };

@@ -1,20 +1,12 @@
+import Clock from '../../components/ui/Clock.js';
+import Users from './users/index.js';
+
 export default function dashboard() {
   return {
-    type: 'terminal',
-    commands: [
-      {
-        command: 'init system',
-        output: 'Sistema de dashboard inicializado',
-        isError: false
-      },
-      {
-        command: 'load user_data',
-        output: 'Error: No autorizado',
-        isError: true
-      }
+    type: 'container',
+    children: [
+      // Clock(), // ✅ Ahora sí, llamas a Clock correctamente
+      Users(),
     ],
-    styles: {
-      backgroundColor: '#0a192f'
-    }
   };
 }

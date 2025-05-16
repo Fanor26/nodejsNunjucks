@@ -1,14 +1,8 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    minlength: 3,
-  },
+  nombre: { type: String, required: true },
+  apellido: { type: String, required: true },
   email: {
     type: String,
     required: true,
@@ -30,33 +24,62 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
-  roles: {
-    type: [String],
-    default: ['user'],
-    enum: ['user', 'admin'], // Roles permitidos
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  nacionalidad: { type: String, required: true },
+  ciudad: { type: String, required: true },
+  active: { type: Boolean, default: true },
+
+  roles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Role' }],
+  cuentas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Account' }],
 });
 
-// Hash de contraseña antes de guardar
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+const User = mongoose.model('User', userSchema);
 
-  try {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
-});
+const Admin = User.discriminator(
+  'Admin',
+  new mongoose.Schema({
+    nivelAdministrador: {
+      type: String,
+      enum: ['bajo', 'medio', 'alto'],
+      default: 'bajo',
+    },
+  })
+);
 
-// Método para comparar contraseñas
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return bcrypt.compare(candidatePassword, this.password);
-};
+const Director = User.discriminator(
+  'Director',
+  new mongoose.Schema({
+    servicios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Service' }],
+    especialidades: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Specialty' },
+    ],
+    horariosAtencion: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Schedule' },
+    ],
+  })
+);
 
-export default mongoose.model('User', userSchema);
+const Doctor = User.discriminator(
+  'Doctor',
+  new mongoose.Schema({
+    especialidades: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Specialty' },
+    ],
+    horarios: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Schedule' }],
+    programacionCitas: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' },
+    ],
+  })
+);
+
+const Paciente = User.discriminator(
+  'Paciente',
+  new mongoose.Schema({
+    citas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Appointment' }],
+    historialClinico: [
+      { type: mongoose.Schema.Types.ObjectId, ref: 'HistoryClinic' },
+    ],
+  })
+);
+
+// ✅ Exportación nombrada
+export { User, Admin, Director, Doctor, Paciente };
