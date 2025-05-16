@@ -1,56 +1,37 @@
+// asyncLoadItems.js
 import { fetcher } from '../api/fetcher.js';
-import { debugLog } from '../debug.js'; // Make sure to import debugLog
+import { debugLog } from '../debug.js';
 
 export async function asyncLoadItems(entityType) {
-  const requestId = `load-${entityType}-${Math.random()
-    .toString(36)
-    .substring(2, 8)}`;
-
   try {
-    debugLog(`[${requestId}] Starting to load ${entityType} items`);
-    const url = `/api/getAll?type=${entityType}`;
+    debugLog(`[asyncLoadItems] Iniciando carga para ${entityType}`);
 
-    debugLog(`[${requestId}] Making request to: ${url}`);
-    const result = await fetcher({
-      url,
+    const response = await fetcher({
+      url: `/api/getAll?type=${entityType}`,
       method: 'GET',
       credentials: 'include',
     });
 
-    debugLog(`[${requestId}] Received response`, {
-      hasSuccessProperty: 'success' in result,
-      hasDataProperty: 'data' in result,
-      dataIsArray: Array.isArray(result.data),
-      itemCount: Array.isArray(result.data) ? result.data.length : 'N/A',
-    });
+    debugLog('[asyncLoadItems] Respuesta recibida:', response);
 
-    if (!result.success) {
-      debugLog(`[${requestId}] Request failed`, {
-        error: result.error,
-        fullResponse: result,
-      });
-      throw new Error(result.error || `Failed to load ${entityType} items`);
+    if (!response || typeof response !== 'object') {
+      throw new Error('Respuesta inválida del servidor');
     }
 
-    if (!Array.isArray(result.data)) {
-      debugLog(`[${requestId}] Invalid data format`, {
-        actualType: typeof result.data,
-        dataSample: result.data,
-      });
-      throw new Error(`Expected array but got ${typeof result.data}`);
+    const items = Array.isArray(response.data) ? response.data : [];
+
+    if (items.length === 0) {
+      debugLog(`[asyncLoadItems] No hay datos para ${entityType}`);
+      return { success: false, message: 'No hay datos disponibles' };
     }
 
-    debugLog(
-      `[${requestId}] Successfully loaded ${result.data.length} ${entityType} items`
-    );
-    return result.data;
+    return {
+      success: true,
+      data: items,
+      firstItem: items[0], // Para generación de columnas
+    };
   } catch (error) {
-    debugLog(`[${requestId}] Error loading ${entityType} items`, {
-      errorName: error.name,
-      errorMessage: error.message,
-      stack: error.stack,
-    });
-    console.error(`❌ [${requestId}] Error:`, error);
-    throw error;
+    debugLog(`[asyncLoadItems] Error cargando ${entityType}:`, error);
+    throw error; // Relanzamos el error para manejo en el componente
   }
 }

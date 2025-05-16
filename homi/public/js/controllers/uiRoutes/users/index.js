@@ -132,3 +132,6 @@ export const Users = () => {
   return DynamicEntityTable({ entityType: 'User' });
 };
 
+export const Accounts = () => {
+  return DynamicEntityTable({ entityType: 'Account' });
+};
