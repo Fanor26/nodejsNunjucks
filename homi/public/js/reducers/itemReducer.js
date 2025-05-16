@@ -8,7 +8,7 @@ import {
 
 // reducer.js
 export const initialItemsState = {
-  typeEndpoint: '',
+  entityType: '',
   apiSubItem: '',
   items: [],
   loading: false, // Estado de carga
@@ -36,7 +36,7 @@ const itemsReducer = (state = initialItemsState, action) => {
       return { ...state, loading: action.payload }; // Actualizar el estado de `loading`
 
     case 'SET_TYPE_ENDPOINT':
-      return { ...state, typeEndpoint: action.payload }; // Actualizar el estado de `loading`
+      return { ...state, entityType: action.payload }; // Actualizar el estado de `loading`
     case 'SET_API_SUBITEM':
       return { ...state, apiSubItem: action.payload }; // Actualizar el estado de `loading`
     case 'RESET_PAGE_DATA':

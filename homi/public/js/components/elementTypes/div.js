@@ -8,7 +8,9 @@ const Div = {
     if (config.className) {
       div.className = config.className;
     }
-
+    if (config.id) {
+      div.id = config.id;
+    }
     Object.assign(div.style, config.styles || {});
 
     if (config.content) {

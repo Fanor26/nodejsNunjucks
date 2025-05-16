@@ -1,5 +1,5 @@
 import { debugLog } from '../../debug.js';
-
+//JSON-based UI
 export default function Dental() {
   return {
     type: 'container',

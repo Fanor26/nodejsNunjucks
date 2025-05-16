@@ -2,6 +2,7 @@ import { setupUniversalDrag } from './dragUtils.js';
 import { getElementType } from '../../elementTypes/index.js';
 
 export function createDraggableElement(config, id, draggable = true) {
+  // Crear elemento base sin funcionalidad de arrastre
   const elementCreator = getElementType(config.type);
   const element = elementCreator.create(config);
 
@@ -10,32 +11,42 @@ export function createDraggableElement(config, id, draggable = true) {
   element.className = `layout-element ${config.className || ''}`;
   element.dataset.type = config.type;
 
+  // Estilos base independientes de la capacidad de arrastre
   const baseStyles = {
     position: 'relative',
-    cursor: draggable ? 'grab' : config.type,
     userSelect: 'none',
     transition: 'all 0.2s ease',
     zIndex: '1',
     boxSizing: 'border-box',
     display: 'flex',
-    flex:config.type,
-        minHeight: 'min-content',
+    minHeight: 'min-content',
+    ...(config.styles || {}),
   };
 
   Object.assign(element.style, baseStyles);
 
-  // Habilitar arrastre
+  // Añadir funcionalidad de arrastre si está habilitado
   if (draggable) {
-    setupUniversalDrag(element, element, {
-      isContainer: false,
-      onDragStart: (el) => {
-        el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
-      },
-      onDragEnd: (el) => {
-        el.style.boxShadow = '';
-      }
-    });
+    enableDragBehavior(element, config);
   }
 
   return element;
+}
+
+// Función separada para la lógica de arrastre
+function enableDragBehavior(element, config) {
+  element.style.cursor = 'grab';
+
+  setupUniversalDrag(element, element, {
+    isContainer: false,
+    onDragStart: (el) => {
+      el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+      el.style.opacity = '0.9';
+    },
+    onDragEnd: (el) => {
+      el.style.boxShadow = '';
+      el.style.opacity = '1';
+    },
+    ...(config.dragOptions || {}),
+  });
 }

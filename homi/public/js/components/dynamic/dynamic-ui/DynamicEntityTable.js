@@ -1,78 +1,118 @@
 import DataGrid from '../../../components/elementTypes/dataGrid.js';
-import { asyncLoadItems } from '[ruta-a-asyncLoadItems]';
+import { asyncLoadItems } from '../../../lib/asyncLoadItems.js';
 import {
   setTypeEndpoint,
   setCurrentData,
-} from '/js/actions/dispatchActions.js';
-
+} from '../../../actions/dispatchActions.js';
+import { debugLog } from '../../../debug.js';
+import { fetcher } from '../../../api/fetcher.js';
 export default function DynamicEntityTable({ entityType = 'User' }) {
   const loadTableData = async () => {
     const tableContainer = document.querySelector('.entity-table-container');
+    debugLog(`Iniciando carga de datos para ${entityType}`);
 
     try {
-      // 1. Establecer el tipo en el store (para que otras partes de la app lo sepan)
-      store.dispatch(setTypeEndpoint(entityType));
+      // 1. Set type in store
+      debugLog(`Estableciendo tipo en el store: ${entityType}`);
+      setTypeEndpoint(entityType);
 
-      // 2. Cargar los datos (ya usa el store internamente)
-      const result = await asyncLoadItems(entityType);
+      // 2. Load data with proper validation
+      debugLog(`Solicitando datos para ${entityType}`);
+      const response = await fetcher({
+        url: `/api/getAll?type=${entityType}`,
+        method: 'GET',
+        credentials: 'include',
+      });
 
-      if (!result?.success || !Array.isArray(result.data)) {
-        tableContainer.textContent = `No se pudieron cargar los ${entityType}s.`;
+      debugLog('Respuesta completa:', response);
+
+      // Proper data validation
+      if (!response || typeof response !== 'object') {
+        throw new Error('Respuesta inválida del servidor');
+      }
+
+      const result = response.success
+        ? response
+        : { success: false, data: response };
+      const items = Array.isArray(result.data) ? result.data : [];
+
+      if (items.length === 0) {
+        debugLog(`No hay datos de ${entityType} disponibles`);
+        tableContainer.textContent = `No hay ${entityType}s registrados.`;
         return;
       }
 
-      // 3. Opcional: Guardar datos en el store si otros componentes los necesitan
-      store.dispatch(setCurrentData(result.data));
+      // 3. Store data
+      debugLog(`Guardando ${items.length} items en el store`);
+      setCurrentData(items); // Directly pass the array
 
-      // 4. Renderizar tabla dinámica
-      const autoColumns = generateColumns(result.data[0], entityType);
+      // 4. Generate columns with proper field filtering
+      const autoColumns = generateColumns(items[0], entityType);
+      debugLog('Columnas generadas:', autoColumns);
 
+      // 5. Create and render DataGrid
       const dataGrid = DataGrid.create({
         title: `${entityType}s Registrados`,
         searchPlaceholder: `Buscar ${entityType}...`,
         columns: autoColumns,
-        data: result.data,
+        data: items,
       });
 
       tableContainer.innerHTML = '';
       tableContainer.appendChild(dataGrid);
+      debugLog('Tabla renderizada exitosamente');
     } catch (err) {
-      console.error(`Error al cargar ${entityType}s:`, err);
-      tableContainer.textContent = 'Error de conexión con el servidor.';
+      debugLog(`Error al cargar ${entityType}s:`, err);
+      tableContainer.textContent = `Error: ${err.message}`;
+      console.error(err);
     }
   };
 
-  // Función para generar columnas dinámicas con configuraciones especiales
+  // Enhanced column generator
   const generateColumns = (sampleItem, type) => {
-    const baseColumns = Object.keys(sampleItem || {}).map((key) => ({
-      field: key,
-      title: key.charAt(0).toUpperCase() + key.slice(1),
-      width: 'auto',
-    }));
-
-    // Configuraciones especiales por tipo
-    switch (type) {
-      case 'User':
-        return baseColumns.map((col) => {
-          if (col.field === 'id') return { ...col, width: '120px' };
-          if (col.field === 'email') return { ...col, width: '2fr' };
-          return col;
-        });
-      case 'Account':
-        return baseColumns.map((col) => {
-          if (col.field === 'balance') return { ...col, width: '150px' };
-          return col;
-        });
-      default:
-        return baseColumns;
+    if (!sampleItem) {
+      return [
+        { field: '_id', title: 'ID', width: 100 },
+        { field: 'nombre', title: 'Nombre', width: 150 },
+      ];
     }
+
+    const excludedFields = ['__v', '__t', 'password', 'createdAt', 'updatedAt'];
+    const typeSpecificFields = {
+      User: ['nombre', 'apellido', 'dni', 'email', 'active', 'ciudad'],
+      Doctor: ['nombre', 'apellido', 'especialidad', 'matricula'],
+      Paciente: ['nombre', 'apellido', 'historiaClinica'],
+    };
+
+    const fieldsToShow =
+      typeSpecificFields[type] ||
+      Object.keys(sampleItem).filter(
+        (key) =>
+          !excludedFields.includes(key) &&
+          !key.startsWith('_') &&
+          typeof sampleItem[key] !== 'object'
+      );
+
+    return fieldsToShow.map((key) => ({
+      field: key,
+      title:
+        key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1'),
+      width: 'auto',
+      render: (value) => {
+        if (value === undefined || value === null) return '';
+        if (key === 'active') return value ? '✅ Activo' : '❌ Inactivo';
+        if (typeof value === 'object') return '[...]';
+        return String(value);
+      },
+    }));
   };
 
-  // Iniciar carga
+  // Initialize
   setTimeout(loadTableData, 0);
 
   return {
     type: 'div',
+
     className: 'entity-table-container',
     styles: {
       padding: '2rem',

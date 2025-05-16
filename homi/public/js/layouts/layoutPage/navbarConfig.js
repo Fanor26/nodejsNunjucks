@@ -44,7 +44,7 @@ export const createNavbar = (
   );
 
   const centerItems = menuItemsFiltered.map((route) => ({
-    type: 'listitem',
+    type: 'list-item',
     text: route.title,
     styles: {
       ...navbarStyles.menuItem,
@@ -62,12 +62,12 @@ export const createNavbar = (
   // Contenedor derecho (auth)
   const rightChildren = isAuthenticated
     ? [
-        {
-          type: 'avatar',
-          image: avatarUrl,
-          size: '2.5rem',
-          styles: navbarStyles.avatar,
-        },
+        // {
+        //   type: 'avatar',
+        //   image: avatarUrl,
+        //   size: '2.5rem',
+        //   styles: navbarStyles.avatar,
+        // },
         {
           type: 'text',
           content: displayName,

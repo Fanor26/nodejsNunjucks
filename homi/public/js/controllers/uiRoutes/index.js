@@ -8,6 +8,7 @@ import loginController from './login.js';
 import RegisterController from './register.js';
 import Dental from './dental.js';
 import Radiology from './radiology.js';
+import { Accounts } from './account.js';
 
 export const routeControllers = {
   Inicio: home,
@@ -15,6 +16,7 @@ export const routeControllers = {
   'Iniciar Sesión': loginController,
   Registrarse: RegisterController,
   Dashboard: dashboard,
+  Cuentas: Accounts,
   perfi: dashboardProfile,
   Especialidades: Specialty,
   Dental: Dental,

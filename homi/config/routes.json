@@ -103,5 +103,12 @@
     "alias": "especialidades",
     "view": "specialties.njk",
     "private": true
+  },
+  {
+    "path": "/accounts",
+    "title": "Cuentas",
+    "alias": "cuentas",
+    "view": "acounts.njk",
+    "private": true
   }
 ]

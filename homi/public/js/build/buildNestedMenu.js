@@ -42,13 +42,13 @@ export const buildNestedMenu = (
       onClick: () => onRouteClick?.(item.path),
     };
 
-    if (!hasChildren) return { type: 'listitem', ...listItemConfig };
+    if (!hasChildren) return { type: 'list-item', ...listItemConfig };
 
     return {
       type: 'container',
       styles: { display: 'flex', flexDirection: 'column' },
       children: [
-        { type: 'listitem', ...listItemConfig },
+        { type: 'list-item', ...listItemConfig },
         {
           type: 'container',
           styles: {

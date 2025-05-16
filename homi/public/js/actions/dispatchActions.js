@@ -1,9 +1,14 @@
 import { store } from '../store/index.js';
 // dispatchActions.js
-import store from './store';
+import { debugLog } from '../debug.js';
+export const dispatch = store.dispatch;
 
-export const dispatch = dispatch;
-
+export function setCurrentData(items) {
+  dispatch({
+    type: 'SET_ITEMS',
+    payload: items, // Direct array of items});
+  });
+}
 export function setCurrentPath(path) {
   dispatch({ type: 'SET_CURRENT_PATH', payload: path });
 }
@@ -49,8 +54,8 @@ export function logoutDispatch() {
   dispatch({ type: 'LOGOUT' });
 }
 
-export function setTypeEndpoint(typeEndpoint) {
-  dispatch({ type: 'SET_TYPE_ENDPOINT', payload: typeEndpoint });
+export function setTypeEndpoint(entityType) {
+  dispatch({ type: 'SET_TYPE_ENDPOINT', payload: entityType });
 }
 
 export function setApiSubItem(apiSubItem) {
