@@ -1,0 +1,13 @@
+{% extends "index.njk" %}
+{% block content %}
+<h1>Perfil de Usuario</h1>
+<div id="profile-data">
+  <p>Cargando perfil...</p>
+</div>
+<div id="buttons-container"></div>
+
+<script type="module">
+  import { renderProfile } from '/js/controllers/profile.js';
+  renderProfile();
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+<div id="data-container"></div>
+
+<script type="module">
+ 
+  import {
+    setTypeEndpoint,
+    setApiSubItem,
+  } from '/js/actions/dispatchActions.js';
+  // Asegurarse de que el DOM esté cargado antes de ejecutar el código
+  const apiEndpoint = '{{ typeEndpoint|lower }}';
+  const subItem = '{{ apiSubItem|lower }}';
+  setTypeEndpoint(apiEndpoint);
+  setApiSubItem(subItem);
+</script>

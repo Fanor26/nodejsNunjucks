@@ -1,0 +1,114 @@
+[
+  {
+    "path": "/home",
+    "view": "publicPages/home.njk",
+    "title": "Inicio",
+    "alias": "inicio",
+    "mdname": "Público",
+    "private": false,
+    "children": [
+      {
+        "path": "specialties",
+        "title": "Especialidades",
+        "alias": "especialidades",
+        "view": "specialties.njk",
+        "private": false,
+        "children": [
+          {
+            "path": "dental",
+            "title": "Dental",
+            "alias": "dental",
+            "view": "dental.njk",
+            "private": false
+          },
+          {
+            "path": "medical",
+            "title": "Medical",
+            "alias": "medical",
+            "view": "medical.njk",
+            "private": false,
+            "children": [
+              {
+                "path": "radiology",
+                "title": "Radiología",
+                "alias": "radiologia",
+                "view": "radiology.njk",
+                "private": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/about",
+    "view": "about.njk",
+    "title": "Sobre Nosotros",
+    "alias": "sobre_nosotros",
+    "mdname": "Público",
+    "private": false
+  },
+  {
+    "path": "/login",
+    "view": "auth/login.njk",
+    "title": "Iniciar Sesión",
+    "alias": "login",
+    "mdname": "Autenticación",
+    "private": false
+  },
+  {
+    "path": "/register",
+    "view": "auth/register.njk",
+    "title": "Registrarse",
+    "alias": "registrarse",
+    "mdname": "Autenticación",
+    "private": false
+  },
+  {
+    "path": "/dashboard",
+    "view": "dashboard/index.njk",
+    "title": "Dashboard",
+    "private": true,
+    "roles": ["admin", "user"],
+    "children": [
+      {
+        "path": "/settings",
+        "view": "dashboard/settings.njk",
+        "title": "Configuraciones",
+        "private": true,
+        "roles": ["admin"]
+      },
+      {
+        "path": "/profile",
+        "view": "dashboard/profile.njk",
+        "title": "Perfil",
+        "private": true,
+        "roles": ["admin", "user"],
+        "children": [
+          {
+            "path": "/edit",
+            "view": "dashboard/profile/edit.njk",
+            "title": "Editar Perfil",
+            "private": true,
+            "roles": ["user"]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/specialties",
+    "title": "Especialidades",
+    "alias": "especialidades",
+    "view": "specialties.njk",
+    "private": true
+  },
+  {
+    "path": "/accounts",
+    "title": "Cuentas",
+    "alias": "cuentas",
+    "view": "acounts.njk",
+    "private": true
+  }
+]

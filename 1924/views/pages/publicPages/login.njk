@@ -1,0 +1,6 @@
+{% extends "index.njk" %}{% block content %}{% set actionData = {
+  "pageNjk": "login",
+  "title": "Página Clínica",
+  "user": { "name": "Juan", "role": "admin" }
+} %}  {%include
+"pages/layout.njk" %} {% endblock %}

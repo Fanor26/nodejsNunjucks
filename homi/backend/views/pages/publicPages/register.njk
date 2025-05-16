@@ -1,0 +1,167 @@
+{% extends "index.njk" %} {% block content %}
+<h1 style="color: aliceblue">Registrar Usuario</h1>
+
+<!-- Contenedor para el formulario -->
+<div id="formContainer"></div>
+
+<p
+  id="errorMessage"
+  style="color: red; display: none"
+></p>
+
+<script type="module">
+  // Script principal
+  import { CreateButton } from '/js/components/controls/button.js';
+  import { CreateInput } from '/js/components/controls/input.js';
+  import { Form } from '/js/components/controls/form.js';
+  import { CreateCard } from '/js/components/custom/card.js'; // Importar CreateCard
+  import useForm from '/js/hooks/useForm.js';
+
+  // Valores iniciales del formulario
+  const initialValues = {
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '', // Confirmación de contraseña
+  };
+
+  // Función de validación
+  const validate = (values) => {
+    const errors = {};
+
+    if (!values.name) {
+      errors.name = 'El nombre es requerido';
+    }
+
+    if (!values.email) {
+      errors.email = 'El email es requerido';
+    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
+      errors.email = 'El email no es válido';
+    }
+
+    if (!values.password) {
+      errors.password = 'La contraseña es requerida';
+    } else if (values.password.length < 6) {
+      errors.password = 'La contraseña debe tener al menos 6 caracteres';
+    }
+
+    if (!values.confirmPassword) {
+      errors.confirmPassword = 'La confirmación de la contraseña es requerida';
+    } else if (values.password !== values.confirmPassword) {
+      errors.confirmPassword = 'Las contraseñas no coinciden';
+    }
+
+    return errors;
+  };
+
+  // Función para manejar el envío del formulario
+  const onSubmit = async (values) => {
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('jwt', data.token);
+        window.location.href = '/dashboard';
+      } else {
+        document.getElementById('errorMessage').textContent = data.error;
+        document.getElementById('errorMessage').style.display = 'block';
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      document.getElementById('errorMessage').textContent = 'Error de conexión';
+      document.getElementById('errorMessage').style.display = 'block';
+    }
+  };
+
+  // Inicializar el formulario
+  const formState = useForm(initialValues, validate, onSubmit);
+
+  // Crear campos de entrada
+  const nameInput = CreateInput(
+    'name',
+    'name',
+    'Nombre', // Placeholder para el campo de nombre
+    (value) => formState.handleChange({ target: { name: 'name', value } }),
+    formState.errors.name
+  );
+
+  const emailInput = CreateInput(
+    'email',
+    'email',
+    'Email', // Placeholder para el campo de email
+    (value) => formState.handleChange({ target: { name: 'email', value } }),
+    formState.errors.email
+  );
+
+  const passwordInput = CreateInput(
+    'password',
+    'password',
+    'Contraseña', // Placeholder para el campo de contraseña
+    (value) => formState.handleChange({ target: { name: 'password', value } }),
+    formState.errors.password
+  );
+
+  const confirmPasswordInput = CreateInput(
+    'confirmPassword',
+    'confirmPassword',
+    'Confirmar Contraseña', // Placeholder para confirmar la contraseña
+    (value) =>
+      formState.handleChange({ target: { name: 'confirmPassword', value } }),
+    formState.errors.confirmPassword
+  );
+
+  // Suscribirse a cambios en los errores
+  formState.subscribeErrors((errors) => {
+    nameInput.updateError(errors.name || '');
+    emailInput.updateError(errors.email || '');
+    passwordInput.updateError(errors.password || '');
+    confirmPasswordInput.updateError(errors.confirmPassword || '');
+  });
+
+  // Crear el botón de registro
+  const registerButton = CreateButton('Registrar', {
+    backgroundColor: '#007bff',
+    padding: '12px 24px',
+    fontSize: '18px',
+  });
+
+  // Crear el formulario
+  const registerForm = Form({
+    className: 'register-form',
+    onSubmit: formState.handleSubmit,
+    children: [
+      nameInput.container,
+      emailInput.container,
+      passwordInput.container,
+      confirmPasswordInput.container,
+      registerButton,
+    ],
+  });
+
+  // Crear la tarjeta con el formulario como cuerpo
+  const registerCard = CreateCard(
+    {
+      cardHeader: 'Registrar Usuario', // Encabezado de la tarjeta
+      cardBody: registerForm, // El formulario como cuerpo de la tarjeta
+    },
+    {
+      card: {
+        width: '450px', // Ajusta el ancho de la tarjeta
+      },
+    }
+  );
+
+  // Agregar la tarjeta al contenedor
+  document
+    .getElementById('formContainer')
+    .appendChild(registerCard.cardContainer);
+</script>
+{% endblock %}

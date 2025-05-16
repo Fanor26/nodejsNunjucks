@@ -1,0 +1,11 @@
+{% extends "index.njk" %} {% block content %}
+
+<!-- Inyectar el tipo de endpoint como un valor global -->
+
+{% set actionData = {
+  typeEndpoint: 'Director',
+  apiSubItem: 'roles',
+  pageNjk: ''
+} %}
+ {% include
+"pages/privatePages/index.njk" %}{% endblock %}

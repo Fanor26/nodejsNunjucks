@@ -1,0 +1,48 @@
+{% extends "index.njk" %} {% block content %}
+<h1 style="color: aliceblue">Config</h1>
+
+<!-- Contenedor donde se añadirá el botón creado dinámicamente -->
+<div id="modalContainer"></div>
+
+<script type="module">
+  import { createModal } from '/js/components/custom/modal/index.js';
+  import { CreateButton } from '/js/components/controls/button.js';
+  import { createConfirmCancelButtons } from '/js/utils/modalHelpers.js';
+
+  // Función para abrir el segundo modal con tamaño "small"
+  function openSecondModal() {
+    createModal(
+      'Segundo Modal',
+      'Este es un segundo modal dentro del primero.',
+      '',
+      'small' // Ahora el segundo modal será "small"
+    );
+  }
+
+  // Crear el botón dinámicamente
+  const button = CreateButton(
+    'Abrir Modal',
+    { backgroundColor: '#28a745' },
+    () => {
+      // Crear un contenedor para el contenido del modal
+      const modalContent = document.createElement('div');
+      modalContent.innerHTML = `<p>Este es el contenido del modal.</p>`;
+
+      // Botón dentro del modal
+      const innerButton = CreateButton(
+        'Abrir Segundo Modal',
+        { backgroundColor: '#ff5733', color: 'white' },
+        openSecondModal
+      );
+
+      modalContent.appendChild(innerButton);
+
+      // Abrir el modal principal con tamaño "fullscreen"
+      createModal('Título del Modal', modalContent, '', 'fullscreen');
+    }
+  );
+
+  // Agregar el botón al contenedor
+  document.getElementById('modalContainer').appendChild(button);
+</script>
+{% endblock %}

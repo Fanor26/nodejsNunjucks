@@ -1,0 +1,6 @@
+{
+  "watch": ["src","public"],
+  "ext": "js,njk,css",
+  "ignore": ["dist"],
+  "exec": "yarn run build && node server.js"
+}

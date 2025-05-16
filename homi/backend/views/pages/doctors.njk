@@ -1,0 +1,9 @@
+{% extends "index.njk" %} {% block content %}
+
+<!-- Inyectar el tipo de endpoint como un valor global -->
+
+{%set typeEndpoint = 'Doctor'%} 
+
+{%set apiSubItem = 'roles'%}
+{% include
+"pages/privatePages/index.njk" %}{% endblock %}

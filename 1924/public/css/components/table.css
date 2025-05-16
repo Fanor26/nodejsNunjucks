@@ -1,0 +1,132 @@
+.table-container {
+  background-color: #001f3f;
+  color: white;
+  min-height: 70vh;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra suave */
+  overflow-x: auto; /* Permite scroll horizontal si es necesario */
+  padding: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+  overflow: hidden;
+}
+
+th,
+td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Bordes suaves */
+  padding: 12px 16px; /* Espaciado uniforme */
+}
+
+th {
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo suave para encabezados */
+  color: #f0f0f0;
+  font-weight: bold;
+  text-align: left;
+}
+
+td {
+  background-color: rgba(255, 255, 255, 0.05); /* Fondo suave para las celdas */
+  color: #e0e0e0;
+}
+
+.firstCell {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+}
+
+.merged-cell {
+  background-color: rgba(
+    173,
+    216,
+    230,
+    0.2
+  ); /* Suaviza el color de las celdas unidas */
+  text-align: center;
+}
+
+.tdRow {
+  margin-right: 0.3rem;
+  color: #f0f0f0;
+}
+
+tr:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Suave efecto de hover */
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.selected {
+  background-color: rgba(255, 215, 0, 0.3); /* Color tenue para selección */
+}
+
+@media (max-width: 768px) {
+  th,
+  td {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+/* Botones */
+button {
+  border: none;
+  padding: 10px 16px;
+  margin: 4px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+/* Botones por tipo */
+.activate-btn {
+  background-color: #28a745;
+}
+.activate-btn:hover {
+  background-color: #218838;
+}
+
+.deactivate-btn {
+  background-color: #dc3545;
+}
+.deactivate-btn:hover {
+  background-color: #c82333;
+}
+
+.update-btn {
+  background-color: #ffc107;
+  color: black;
+}
+.update-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #ff3b3b;
+}
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Botón de agregar usuario */
+#add-user {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background-color: #007bff;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+#add-user:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}

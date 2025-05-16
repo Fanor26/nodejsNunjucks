@@ -1,0 +1,10 @@
+{% extends "index.njk" %} {% block content %}
+
+
+{% set actionData = {
+  typeEndpoint: 'Doctor',
+  apiSubItem: 'roles',
+  pageNjk: ''
+} %}
+{% include
+"pages/privatePages/index.njk" %}{% endblock %}
