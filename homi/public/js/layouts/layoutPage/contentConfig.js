@@ -35,7 +35,10 @@ export const createContent = (routes, currentPath) => {
       styles: {
         overflowY: 'auto',
         padding: '20px',
-        backgroundColor: '#2c3e50',
+        justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: 'blue',
       },
       children: Array.isArray(content) ? content : [content],
     };

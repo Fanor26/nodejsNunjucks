@@ -81,17 +81,17 @@ export default function registerController() {
       margin: '5rem auto',
       padding: '2.5rem',
       backgroundColor: '#f7f9fa',
-      borderRadius: '4px',
+      borderRadius: '15px',
       border: '1px solid #ddd',
       boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
     },
     children: [
-      {
-        type: 'logo',
-        src: '/assets/logo.png',
-        alt: 'MiApp',
-        styles: { width: '64px', height: '64px', margin: '0 auto 1.5rem' },
-      },
+      // {
+      //   type: 'logo',
+      //   src: '/assets/logo.png',
+      //   alt: 'MiApp',
+      //   styles: { width: '64px', height: '64px', margin: '0 auto 1.5rem' },
+      // },
       {
         type: 'text',
         content: 'Crea tu cuenta',

@@ -1,14 +1,14 @@
 // src/layouts/layoutPage/sidebarConfig.js
-import { debugLog } from '../../debug.js'
-import { defaultSidebarItems } from '../../mockup/components/sidebarDefaults.js'
-import { buildNestedMenu } from '../../build/buildNestedMenu.js'
+import { debugLog } from '../../debug.js';
+import { defaultSidebarItems } from '../../mockup/components/sidebarDefaults.js';
+import { buildNestedMenu } from '../../build/buildNestedMenu.js';
 
 export const createSidebar = (
   menuItems = [],
   onRouteClick,
   currentPath = '/'
 ) => {
-  const itemsToUse = menuItems.length ? menuItems : defaultSidebarItems
+  const itemsToUse = menuItems.length ? menuItems : defaultSidebarItems;
 
   return {
     area: 'sidebar',
@@ -18,10 +18,10 @@ export const createSidebar = (
       backgroundColor: '#34495e',
       color: 'white',
       overflowY: 'auto',
-      padding: '10px',
+      padding: '5px',
       display: 'flex',
       flexDirection: 'column',
-      gap: '8px'
+      gap: '8px',
     },
     children: [
       {
@@ -33,9 +33,9 @@ export const createSidebar = (
           display: 'flex',
           flex: 1,
           flexDirection: 'column',
-          flexShrink: '0'
+          flexShrink: '0',
         },
-        children: buildNestedMenu(itemsToUse, onRouteClick, currentPath)
+        children: buildNestedMenu(itemsToUse, onRouteClick, currentPath),
       },
       {
         type: 'container',
@@ -44,7 +44,7 @@ export const createSidebar = (
           color: 'white',
           padding: '10px',
           borderTop: '1px solid #34495e',
-          flexShrink: '0'
+          flexShrink: '0',
         },
         children: [
           {
@@ -65,18 +65,18 @@ export const createSidebar = (
               width: '100%',
               textAlign: 'left',
               ':hover': {
-                backgroundColor: 'rgba(255,255,255,0.1)'
-              }
+                backgroundColor: 'rgba(255,255,255,0.1)',
+              },
             },
             onClick: () => {
               if (currentPath !== '/settings') {
-                debugLog('Configuración clickeada')
-                onRouteClick?.('/settings')
+                debugLog('Configuración clickeada');
+                onRouteClick?.('/settings');
               }
-            }
-          }
-        ]
-      }
-    ]
-  }
-}
+            },
+          },
+        ],
+      },
+    ],
+  };
+};

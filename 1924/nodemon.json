@@ -1,5 +1,0 @@
-{
-  "watch": ["./**/*.js", "./**/*.njk", "./**/*.css"],
-  "ext": "js,njk,css",
-  "exec": "node server.js"
-}

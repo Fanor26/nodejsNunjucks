@@ -53,19 +53,25 @@ export default function Login() {
       alignItems: 'stretch',
       width: '400px',
       maxWidth: '90%',
-      margin: '5rem auto',
+      margin: ' auto',
       padding: '2.5rem',
       backgroundColor: '#f7f9fa',
-      borderRadius: '4px',
+      borderRadius: '15px',
       border: '1px solid #ddd',
       boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
     },
     children: [
+      // {
+      //   type: 'logo',
+      //   src: '/assets/logo.png',
+      //   alt: 'MiApp',
+      //   styles: { width: '64px', height: '64px', margin: '0 auto 1.5rem' },
+      // },
       {
-        type: 'logo',
-        src: '/assets/logo.png',
-        alt: 'MiApp',
-        styles: { width: '64px', height: '64px', margin: '0 auto 1.5rem' },
+        type: 'icon',
+        name: 'login',
+        size: '36px',
+        styles: { color: '#4CAF50', margin: '0 auto 1rem' },
       },
       {
         type: 'text',
@@ -100,12 +106,7 @@ export default function Login() {
           debugLog('Contraseña actualizada:', password);
         },
       },
-      {
-        type: 'icon',
-        name: 'login',
-        size: '36px',
-        styles: { color: '#4CAF50', margin: '0 auto 1rem' },
-      },
+
       {
         type: 'button',
         label: 'Ingresar',

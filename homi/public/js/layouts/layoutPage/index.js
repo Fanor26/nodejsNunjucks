@@ -8,11 +8,11 @@ export const createLayoutPage = (routes, routeHandler, currentPath) => {
     layout: {
       type: 'grid',
       areas: [
-        ['navbar', 'navbar', 'navbar'],
+        ['sidebar', 'splitter', 'navbar'],
         ['sidebar', 'splitter', 'content'],
         ['sidebar', 'splitter', 'footer'],
       ],
-      columns: ['250px', '5px', '1fr'], // split a 3 columnas, splitter 5px ancho
+      columns: ['270px', '5px', '1fr'], // split a 3 columnas, splitter 5px ancho
       rows: ['auto', '1fr', 'auto'],
       styles: {
         height: '100vh',
