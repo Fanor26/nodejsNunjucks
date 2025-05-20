@@ -23,11 +23,11 @@ export const App = async (path) => {
       debugLog(
         `Ruta ${path} no permitida. Redirigiendo a ${firstAvailableRoute}`
       );
-      return handleRouteChange(firstAvailableRoute);
+      return navigateTo(firstAvailableRoute);
     }
     document.title = currentRoute.title || currentRoute.path;
     // 🚀 Solo usas las rutas ya guardadas en el store
-    const layout = createLayoutPage(routing.routes, navigateTo, path);
+    const layout = createLayoutPage(routing.routes,navigateTo, path);
     initLayout([layout], '#app');
 
     // Esperar al siguiente tick del DOM para asegurar que esté montado

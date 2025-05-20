@@ -35,15 +35,15 @@ const routesConfig = JSON.parse(
   fs.readFileSync(path.join(__dirname, './config/routes.json'), 'utf-8')
 );
 // 🟢 CORS PRIMERO (antes de sesiones, rutas, etc)
-app.use(
-  cors({
-    origin: [
-      'https://15000-fanor26-nodejsnunjucks-12s16nkk8mb.ws-us118.gitpod.io',
-      'https://4000-fanor19481956-nunjucks-rv5k15v8nef.ws-us118.gitpod.io',
-    ],
-    credentials: true, // ✅ permite enviar cookies y encabezados de autenticación
-  })
-);
+// app.use(
+//   cors({
+//     origin: [
+//       'https://15000-fanor26-nodejsnunjucks-12s16nkk8mb.ws-us118.gitpod.io',
+//       'https://4000-fanor19481956-nunjucks-rv5k15v8nef.ws-us118.gitpod.io',
+//     ],
+//     credentials: true, // ✅ permite enviar cookies y encabezados de autenticación
+//   })
+// );
 // 🛡️ CSP nonce
 app.use((req, res, next) => {
   const nonce = crypto.randomBytes(16).toString('base64');
@@ -63,16 +63,16 @@ app.use(
     secret: process.env.SESSION_SECRET || 'mi_secreto',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-    }),
-    cookie: {
-      path: '/',
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' && !isGitpod, // ✅ Desactiva secure si es Gitpod
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 30, // 30 minutos
-    },
+    // store: MongoStore.create({
+    //    mongoUrl: process.env.MONGO_URI,
+    //  }),
+    // cookie: {
+ 
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production' , // ✅ Desactiva secure si es Gitpod
+    //   sameSite: 'lax',
+    //   maxAge: 1000 * 60 * 30, // 30 minutos
+    // },
   })
 );
 

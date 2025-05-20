@@ -11,8 +11,8 @@ import { checkSession } from './actions/authActions.js';
 
 // Importamos las funciones del Tree Viewer
 import { renderTreeViewer, safeUpdateTreeViewer } from './redux/treeView.js';
-import { getCurrentPath } from './router/index.js';
-import { App } from './app.js';
+import { getCurrentPath, navigateTo } from './router/index.js';
+
 
 const initializeHomi = async () => {
   try {
@@ -31,7 +31,7 @@ const initializeHomi = async () => {
     // Paso 2: Carga las rutas
     await loadRoutes();
     //inicializamos App con navigation personlice
-    await App(currentPath);
+    await navigateTo(currentPath);
 
     // Escucha los cambios de estado de autenticación y actualiza las rutas en consecuencia
     // let previousAuthState = store.getState().auth.isAuthenticated;

@@ -7,7 +7,7 @@ export async function loadRoutes() {
 
   try {
     const data = await fetcher({
-      url: 'https://15000-fanor26-nodejsnunjucks-12s16nkk8mb.ws-us118.gitpod.io/api/routes',
+      url: '/api/routes',
       token,
       credentials: 'include',
     });
